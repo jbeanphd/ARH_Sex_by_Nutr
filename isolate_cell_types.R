@@ -121,40 +121,58 @@ FeaturePlot(Agrp_Sex_by_Nutr, label = FALSE,
 ggsave('figures/agrp_m_fast_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
 
 
+
+FeaturePlot(Agrp_Sex_by_Nutr, label = FALSE, 
+            features = 'Fos', reduction = 'tsne', max.cutoff = 1,
+            pt.size = 1, order = TRUE, cols = c('grey','darkred')) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+ggsave('figures/agrp_fos_dimplot2.tiff', device = 'tiff', units = 'in', width = 3.25,height = 3.25,dpi = 600)
+
+
 saveRDS(Agrp_Sex_by_Nutr, file = 'data/Agrp_Sex_by_Nutr.rds')
 
+#Agrp.F.Fd.v.Fst$p_val_adj[1] = Agrp.F.Fd.v.Fst$p_val_adj[2]
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Agrp', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Agrp', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(Agrp.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(Agrp.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Agrp.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(Agrp.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/agrp_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/agrp_female_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 
-
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Agrp', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Agrp', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0,test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(Agrp.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(Agrp.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Agrp.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(Agrp.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/agrp_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/agrp_male_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 
 
@@ -162,37 +180,39 @@ ggsave(filename = 'figures/agrp_male_fed_vs_fasted_volc.tiff', device = 'tiff', 
 ####
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Agrp', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Agrp', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(Agrp.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(Agrp.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Agrp.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(Agrp.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/agrp_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/agrp_fed_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Agrp', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Agrp', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(Agrp.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(Agrp.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Agrp.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(Agrp.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.7)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/agrp_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/agrp_fasted_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 library(gprofiler2)
 
@@ -203,7 +223,8 @@ Agrp.F.Fd.Fst.induce.gost <- gost(query = (Agrp.F.Fd.v.Fst |> filter(p_val_adj <
                                   organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 
 
-
+write.xlsx(Agrp.F.Fd.Fst.suppress.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Agrp/Agrp_F_Fd_Fst_suppress.xlsx")
 
 Agrp.F.Fd.Fst.suppress.gost$result[c(4,17,18,22, 23),] |> ggplot(aes(-log10(p_value), 
                                                                      factor(term_name, levels = rev(c('PDZ domain binding',
@@ -220,7 +241,8 @@ ggsave(filename = 'figures/agrp_fasting_suppressed_GOMF.tiff', device = 'tiff', 
 
 
 
-
+write.xlsx(Agrp.F.Fd.Fst.induce.gost$result[c(1,4,8,9,12),c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Agrp/Agrp_F_Fd_Fst_induce.xlsx")
 
 Agrp.F.Fd.Fst.induce.gost$result[c(3,5,7,8,18),] |> ggplot(aes(-log10(p_value), 
                                                                      factor(term_name, levels =c('cAMP binding',
@@ -245,7 +267,8 @@ Agrp.M.Fd.Fst.induce.gost <- gost(query = (Agrp.M.Fd.v.Fst |> filter(p_val_adj <
                                   organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 
 
-
+write.xlsx(Agrp.M.Fd.Fst.suppress.gost$result[c(4,5,11,14,15),c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Agrp/Agrp_M_Fd_Fst_suppress.xlsx")
 
 Agrp.M.Fd.Fst.suppress.gost$result[c(3,7,10,11,15),] |> ggplot(aes(-log10(p_value), 
                                                                      factor(term_name, levels = c('protein kinase binding',
@@ -262,7 +285,8 @@ ggsave(filename = 'figures/agrp_fasting_suppressed_in_males_GOMF.tiff', device =
 
 
 
-
+write.xlsx(Agrp.M.Fd.Fst.induce.gost$result[c(4,5,11,14,15),c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Agrp/Agrp_M_Fd_Fst_induce.xlsx")
 
 Agrp.M.Fd.Fst.induce.gost$result[c(5,6,9,10,14),] |> ggplot(aes(-log10(p_value), 
                                                                factor(term_name, levels = c('ion binding',
@@ -287,7 +311,8 @@ Agrp.Fd.male.higher.gost <- gost(query = (Agrp.Fd.F.v.M |> filter(p_val_adj < 0.
                                  organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 
 
-
+write.xlsx(Agrp.Fd.female.higher.gost[c(1:5),c(9,11,3)], 
+           file = "../paper_figures/post_2025-01-06/GOMF_Tables/Agrp_Fd_Female_higher.xlsx")
 
 Agrp.Fd.female.higher.gost$result[c(1:5),] |> ggplot(aes(-log10(p_value), 
                                                                 factor(term_name))) + 
@@ -300,7 +325,8 @@ ggsave(filename = 'figures/Agrp_higher_in_fed_females_GOMF.tiff', device = 'tiff
 
 
 
-
+write.xlsx(Agrp.Fd.male.higher.gost$result[c(1:5),c(9,11,3)], 
+           file = "../paper_figures/post_2025-01-06/GOMF_Tables/Agrp_Fd_male_higher.xlsx")
 
 Agrp.Fd.male.higher.gost$result[c(1:5),] |> ggplot(aes(-log10(p_value), 
                                                                 factor(term_name, levels = c('intracellular ligand-gated monoatomic ion channel activity',
@@ -325,7 +351,8 @@ Agrp.Fst.male.higher.gost <- gost(query = (Agrp.Fst.F.v.M |> filter(p_val_adj < 
                                   organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 
 
-
+write.xlsx(Agrp.Fst.female.higher.gost$result[c(1),c(9,11,3)], 
+           file = "../paper_figures/post_2025-01-06/GOMF_Tables/Agrp_Fst_Female_higher.xlsx")
 
 Agrp.Fst.female.higher.gost$result[c(1),] |> ggplot(aes(-log10(p_value), 
                                                                 factor(term_name))) + 
@@ -338,7 +365,8 @@ ggsave(filename = 'figures/Agrp_higher_in_fasted_females_GOMF.tiff', device = 't
 
 
 
-
+write.xlsx(Agrp.Fst.male.higher.gost$result[c(1:5),c(9,11,3)], 
+           file = "../paper_figures/post_2025-01-06/GOMF_Tables/Agrp_Fst_male_higher.xlsx")
 
 Agrp.Fst.male.higher.gost$result[c(1:5),] |> ggplot(aes(-log10(p_value), 
                                                                factor(term_name, levels = c('ligand-gated monoatomic ion channel activity involved in regulation of presynaptic membrane potential',
@@ -352,6 +380,65 @@ Agrp.Fst.male.higher.gost$result[c(1:5),] |> ggplot(aes(-log10(p_value),
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
 ggsave(filename = 'figures/Agrp_higher_in_fasted_males_GOMF.tiff', device = 'tiff', units = 'in', width = 7, height = 1.5, dpi = 600)
+
+
+
+
+
+
+
+###barplot for fos in agrp####
+
+Agrp_Sex_by_Nutr$SCT@data[c('Agrp','Fos'),] %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  cbind(Agrp_Sex_by_Nutr@meta.data[,c(1:5)]) %>% 
+  ggplot(aes(sexXnutr, Fos)) +
+  stat_summary(geom = 'bar', color = 'black', aes(fill = sexXnutr), width = 0.8) +
+  stat_summary(geom = 'errorbar', color = 'black', width = 0.3) +
+  scale_fill_manual(values = c('#f9994f','#6a816a','#ff6e00','#19552b')) +
+  scale_x_discrete(limits = c('F_Fed', 'F_Fast','M_Fed', 'M_Fast'), labels = c('Fed','Fasted','Fed','Fasted')) +
+  labs(y='Fos Expression', title = '', x = '') +
+  theme_classic() +
+  theme(plot.title = element_text(family = 'Arial', size = 10, color = 'black', hjust = 0.5),
+        axis.title=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.y=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.x=element_text(family = 'Arial', size = 8, color = 'black'),
+        legend.position = 'none')
+ggsave('figures/Fos_in_Agrp_barplot', device = 'tiff', units = 'in', width = 4, height = 2, dpi = 600)
+
+FindMarkers(Agrp_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'F_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
+FindMarkers(Agrp_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'M_Fed', 
+            ident.2 = 'M_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
+
+
+FindMarkers(Agrp_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'M_Fed', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
 
 
 
@@ -471,40 +558,73 @@ FeaturePlot(KNDy_Sex_by_Nutr, label = FALSE,
 ggsave('figures/KNDy_m_fast_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
 
 
-saveRDS(KNDy_Sex_by_Nutr, file = 'data/KNDy_Sex_by_Nutr.rds')
+FeaturePlot(KNDy_Sex_by_Nutr, label = FALSE, 
+            features = 'Fos', reduction = 'tsne', cols = c('grey', 'darkred'), max.cutoff = 1,
+            pt.size = 1, order = TRUE) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'KNDy', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
-  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
-  geom_point(inherit.aes = F, data = filter(KNDy.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
-  geom_point(inherit.aes = F, data = filter(KNDy.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(KNDy.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
-                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+ggsave('figures/KNDy_fos_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+
+###barplot for fos in KNDy####
+
+KNDy_Sex_by_Nutr$SCT@data[c('Tac2','Fos'),] %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  cbind(KNDy_Sex_by_Nutr@meta.data[,c(1:5)]) %>% 
+  ggplot(aes(sexXnutr, Fos)) +
+  stat_summary(geom = 'bar', color = 'black', aes(fill = sexXnutr), width = 0.8) +
+  stat_summary(geom = 'errorbar', color = 'black', width = 0.3) +
+  scale_fill_manual(values = c('#f9994f','#6a816a','#ff6e00','#19552b')) +
+  scale_x_discrete(limits = c('F_Fed', 'F_Fast','M_Fed', 'M_Fast'), labels = c('Fed','Fasted','Fed','Fasted')) +
+  labs(y='Fos Expression', title = '', x = '') +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
-  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
-  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
-        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/KNDy_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+  theme(plot.title = element_text(family = 'Arial', size = 10, color = 'black', hjust = 0.5),
+        axis.title=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.y=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.x=element_text(family = 'Arial', size = 8, color = 'black'),
+        legend.position = 'none')
+ggsave('figures/Fos_in_KNDy_barplot', device = 'tiff', units = 'in', width = 4, height = 2, dpi = 600)
+
+FindMarkers(KNDy_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'F_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
+FindMarkers(KNDy_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'M_Fed', 
+            ident.2 = 'M_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'KNDy', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
-  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
-  geom_point(inherit.aes = F, data = filter(KNDy.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  geom_point(inherit.aes = F, data = filter(KNDy.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(KNDy.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
-                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
-  theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
-  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
-  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
-        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/KNDy_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+FindMarkers(KNDy_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'M_Fed', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
 
 
 
@@ -512,37 +632,83 @@ ggsave(filename = 'figures/KNDy_male_fed_vs_fasted_volc.tiff', device = 'tiff', 
 ####
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'KNDy', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+
+saveRDS(KNDy_Sex_by_Nutr, file = 'data/KNDy_Sex_by_Nutr.rds')
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'KNDy', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast',
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(KNDy.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(KNDy.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(KNDy.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/KNDy_female_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'KNDy', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(KNDy.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(KNDy.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(KNDy.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > .5), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/KNDy_male_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+
+####
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'KNDy', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(KNDy.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(KNDy.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(KNDy.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(KNDy.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,3.01)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/KNDy_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/KNDy_fed_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'KNDy', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'KNDy', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast',
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(KNDy.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(KNDy.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(KNDy.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(KNDy.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.8)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/KNDy_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/KNDy_fasted_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 library(gprofiler2)
 
@@ -552,6 +718,9 @@ KNDy.F.Fd.Fst.suppress.gost <- gost(query = (KNDy.F.Fd.v.Fst |> filter(p_val_adj
 KNDy.F.Fd.Fst.induce.gost <- gost(query = (KNDy.F.Fd.v.Fst |> filter(p_val_adj < 0.05, avg_log2FC < 0) |> select(gene) |> as.list()) ,
                                   organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 
+
+write.xlsx(KNDy.F.Fd.Fst.suppress.gost$result[c(1:5),c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/KNDy_F_Fd_Fst_suppress.xlsx")
 
 
 
@@ -567,6 +736,12 @@ KNDy.F.Fd.Fst.suppress.gost$result[c(4,6,9,11,13),] |> ggplot(aes(-log10(p_value
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
 ggsave(filename = 'figures/KNDy_fasting_suppressed_GOMF.tiff', device = 'tiff', units = 'in', width = 3.5, height = 1.5, dpi = 600)
+
+
+
+
+write.xlsx(KNDy.F.Fd.Fst.induce.gost$result[c(1:5),c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/KNDy_F_Fd_Fst_induce.xlsx")
 
 
 
@@ -596,6 +771,12 @@ KNDy.M.Fd.Fst.induce.gost <- gost(query = (KNDy.M.Fd.v.Fst |> filter(p_val_adj <
 
 
 
+write.xlsx(KNDy.M.Fd.Fst.suppress.gost$result[c(3,7,10,11,15),c(9,11,3)], 
+           file = "../paper_figures/post_2025-01-06/GOMF_Tables/KNDy/KNDy_M_Fd_Fst_suppress.xlsx")
+
+
+
+
 
 KNDy.M.Fd.Fst.suppress.gost$result[c(3,7,10,11,15),] |> ggplot(aes(-log10(p_value), 
                                                                    factor(term_name, levels = c('protein kinase binding',
@@ -609,6 +790,12 @@ KNDy.M.Fd.Fst.suppress.gost$result[c(3,7,10,11,15),] |> ggplot(aes(-log10(p_valu
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
 ggsave(filename = 'figures/KNDy_fasting_suppressed_in_males_GOMF.tiff', device = 'tiff', units = 'in', width = 3.5, height = 1.5, dpi = 600)
+
+
+
+
+write.xlsx(KNDy.M.Fd.Fst.induce.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/KNDy_M_Fd_Fst_induce.xlsx")
 
 
 
@@ -640,6 +827,12 @@ KNDy.Fd.male.higher.gost <- gost(query = (KNDy.Fd.F.v.M |> filter(p_val_adj < 0.
 
 
 
+write.xlsx(KNDy.Fd.female.higher.gost$result[c(1:5),c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/KNDy_Fd_Female_higher.xlsx")
+
+
+
+
 
 KNDy.Fd.female.higher.gost$result[c(3,5,6,8,10),] |> ggplot(aes(-log10(p_value), 
                                                                    factor(term_name, levels = c('intracellular sodium-activated potassium channel activity',
@@ -655,6 +848,10 @@ KNDy.Fd.female.higher.gost$result[c(3,5,6,8,10),] |> ggplot(aes(-log10(p_value),
 ggsave(filename = 'figures/KNDy_higher_in_fed_females_GOMF.tiff', device = 'tiff', units = 'in', width = 4, height = 1.5, dpi = 600)
 
 
+
+
+write.xlsx(KNDy.Fd.male.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/KNDy_Fd_male_higher.xlsx")
 
 
 
@@ -682,6 +879,10 @@ KNDy.Fst.male.higher.gost <- gost(query = (KNDy.Fst.F.v.M |> filter(p_val_adj < 
 
 
 
+write.xlsx(KNDy.Fst.female.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/KNDy_Fst_Female_higher.xlsx")
+
+
 
 KNDy.Fst.female.higher.gost$result[c(1,4,5,7,8),] |> ggplot(aes(-log10(p_value), 
                                                                 factor(term_name, levels = c('AMPA glutamate receptor activity',
@@ -696,6 +897,10 @@ KNDy.Fst.female.higher.gost$result[c(1,4,5,7,8),] |> ggplot(aes(-log10(p_value),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
 ggsave(filename = 'figures/KNDy_higher_in_fasted_females_GOMF.tiff', device = 'tiff', units = 'in', width = 3.5, height = 1.5, dpi = 600)
 
+
+
+write.xlsx(KNDy.Fst.male.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/KNDy_Fst_male_higher.xlsx")
 
 
 
@@ -719,7 +924,7 @@ ggsave(filename = 'figures/KNDy_higher_in_fasted_males_GOMF.tiff', device = 'tif
 
 
 ##### DA
-
+DA_Sex_by_Nutr <- readRDS('data/DA_Sex_by_Nutr.rds')
 
 DA_Sex_by_Nutr <- subset(ARH_Sex_by_Nutr, subset = cell_type3 == 'DA')
 
@@ -829,40 +1034,75 @@ FeaturePlot(DA_Sex_by_Nutr, label = FALSE,
 ggsave('figures/DA_m_fast_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
 
 
-saveRDS(DA_Sex_by_Nutr, file = 'data/DA_Sex_by_Nutr.rds')
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'DA', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
-  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
-  geom_point(inherit.aes = F, data = filter(DA.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
-  geom_point(inherit.aes = F, data = filter(DA.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(DA.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
-                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+FeaturePlot(DA_Sex_by_Nutr, label = FALSE, 
+            features = 'Fos', reduction = 'tsne', cols = c('grey','darkred'), max.cutoff = 1,
+            pt.size = 1, order = TRUE) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+
+
+ggsave('figures/DA_fos_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+
+###barplot for fos in DA ####
+
+DA_Sex_by_Nutr$SCT@data[c('Th','Fos'),] %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  cbind(DA_Sex_by_Nutr@meta.data[,c(1:5)]) %>% 
+  ggplot(aes(sexXnutr, Fos)) +
+  stat_summary(geom = 'bar', color = 'black', aes(fill = sexXnutr), width = 0.8) +
+  stat_summary(geom = 'errorbar', color = 'black', width = 0.3) +
+  scale_fill_manual(values = c('#f9994f','#6a816a','#ff6e00','#19552b')) +
+  scale_x_discrete(limits = c('F_Fed', 'F_Fast','M_Fed', 'M_Fast'), labels = c('Fed','Fasted','Fed','Fasted')) +
+  labs(y='Fos Expression', title = '', x = '') +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
-  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
-  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
-        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/DA_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+  theme(plot.title = element_text(family = 'Arial', size = 10, color = 'black', hjust = 0.5),
+        axis.title=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.y=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.x=element_text(family = 'Arial', size = 8, color = 'black'),
+        legend.position = 'none')
+ggsave('figures/Fos_in_DA_barplot', device = 'tiff', units = 'in', width = 4, height = 2, dpi = 600)
+
+FindMarkers(DA_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'F_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
+FindMarkers(DA_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'M_Fed', 
+            ident.2 = 'M_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'DA', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
-  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
-  geom_point(inherit.aes = F, data = filter(DA.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  geom_point(inherit.aes = F, data = filter(DA.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(DA.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
-                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
-  theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
-  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
-  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
-        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/DA_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+FindMarkers(DA_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'M_Fed', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
 
 
 
@@ -870,37 +1110,86 @@ ggsave(filename = 'figures/DA_male_fed_vs_fasted_volc.tiff', device = 'tiff', un
 ####
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'DA', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+
+
+
+
+saveRDS(DA_Sex_by_Nutr, file = 'data/DA_Sex_by_Nutr.rds')
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'DA', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast',
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(DA.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(DA.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(DA.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > .7), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/DA_female_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'DA', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(DA.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(DA.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(DA.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/DA_male_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+
+####
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'DA', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(DA.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(DA.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(DA.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(DA.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.6)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/DA_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/DA_fed_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'DA', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'DA', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast',
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(DA.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(DA.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(DA.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(DA.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.6)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/DA_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/DA_fasted_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 library(gprofiler2)
 
@@ -909,6 +1198,11 @@ DA.F.Fd.Fst.suppress.gost <- gost(query = (DA.F.Fd.v.Fst |> filter(p_val_adj < 0
                                     organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 DA.F.Fd.Fst.induce.gost <- gost(query = (DA.F.Fd.v.Fst |> filter(p_val_adj < 0.05, avg_log2FC < 0) |> select(gene) |> as.list()) ,
                                   organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
+
+
+
+write.xlsx(DA.F.Fd.Fst.suppress.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/DA_F_Fd_Fst_suppress.xlsx")
 
 
 
@@ -925,6 +1219,10 @@ DA.F.Fd.Fst.suppress.gost$result |> ggplot(aes(-log10(p_value),
 ggsave(filename = 'figures/DA_fasting_suppressed_GOMF.tiff', device = 'tiff', units = 'in', width = 3.5, height = 1.5, dpi = 600)
 
 
+
+
+write.xlsx(DA.F.Fd.Fst.induce.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/DA_F_Fd_Fst_suppress.xlsx")
 
 
 
@@ -962,6 +1260,10 @@ DA.Fd.male.higher.gost <- gost(query = (DA.Fd.F.v.M |> filter(p_val_adj < 0.05, 
 
 
 
+write.xlsx(DA.Fd.female.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/DA_Fd_Female_higher.xlsx")
+
+
 
 DA.Fd.female.higher.gost$result |> ggplot(aes(-log10(p_value), 
                                                                 factor(term_name))) + 
@@ -972,6 +1274,10 @@ DA.Fd.female.higher.gost$result |> ggplot(aes(-log10(p_value),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
 ggsave(filename = 'figures/DA_higher_in_fed_females_GOMF.tiff', device = 'tiff', units = 'in', width = 3.5, height = .75, dpi = 600)
 
+
+
+#write.xlsx(DA.Fd.male.higher.gost$result[c(1,2,7,10,15),c(9,11,3)], 
+#           file = "../paper_figures/post_2025-01-06/GOMF_Tables/KNDy/DA_Fd_Male_higher.xlsx")
 
 
 
@@ -1000,6 +1306,10 @@ DA.Fst.male.higher.gost <- gost(query = (DA.Fst.F.v.M |> filter(p_val_adj < 0.05
 
 
 
+write.xlsx(DA.Fst.female.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/KNDy/DA_Fst_Female_higher.xlsx")
+
+
 
 DA.Fst.female.higher.gost$result |> ggplot(aes(-log10(p_value), 
                                                                 factor(term_name, levels = c('neurotrophin binding',
@@ -1012,6 +1322,10 @@ DA.Fst.female.higher.gost$result |> ggplot(aes(-log10(p_value),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
 ggsave(filename = 'figures/DA_higher_in_fasted_females_GOMF.tiff', device = 'tiff', units = 'in', width = 3.5, height = 1.5, dpi = 600)
 
+
+
+write.xlsx(DA.Fst.male.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-01-06/GOMF_Tables/KNDy/DA_Fst_Male_higher.xlsx")
 
 
 
@@ -1032,7 +1346,7 @@ ggsave(filename = 'figures/DA_higher_in_fasted_males_GOMF.tiff', device = 'tiff'
 ####
 
 ##### Ghrh.Chat
-
+Ghrh.Chat_Sex_by_Nutr <- readRDS('data/Ghrh.Chat_Sex_by_Nutr.rds')
 
 Ghrh.Chat_Sex_by_Nutr <- subset(ARH_Sex_by_Nutr, subset = cell_type3 == 'Ghrh/Chat')
 
@@ -1142,40 +1456,74 @@ FeaturePlot(Ghrh.Chat_Sex_by_Nutr, label = FALSE,
 ggsave('figures/Ghrh.Chat_m_fast_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
 
 
-saveRDS(Ghrh.Chat_Sex_by_Nutr, file = 'data/Ghrh.Chat_Sex_by_Nutr.rds')
+
+FeaturePlot(Ghrh.Chat_Sex_by_Nutr, label = FALSE, 
+            features = 'Fos', reduction = 'tsne', cols = c('grey','darkred'), max.cutoff = 1,
+            pt.size = 1, order = TRUE) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Ghrh/Chat', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
-  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
-  geom_point(inherit.aes = F, data = filter(Ghrh.Chat.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
-  geom_point(inherit.aes = F, data = filter(Ghrh.Chat.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Ghrh.Chat.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
-                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+ggsave('figures/Ghrh.Chat_fos_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+
+###barplot for fos in Ghrh/Chat ####
+
+Ghrh.Chat_Sex_by_Nutr$SCT@data[c('Th','Fos'),] %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  cbind(Ghrh.Chat_Sex_by_Nutr@meta.data[,c(1:5)]) %>% 
+  ggplot(aes(sexXnutr, Fos)) +
+  stat_summary(geom = 'bar', color = 'black', aes(fill = sexXnutr), width = 0.8) +
+  stat_summary(geom = 'errorbar', color = 'black', width = 0.3) +
+  scale_fill_manual(values = c('#f9994f','#6a816a','#ff6e00','#19552b')) +
+  scale_x_discrete(limits = c('F_Fed', 'F_Fast','M_Fed', 'M_Fast'), labels = c('Fed','Fasted','Fed','Fasted')) +
+  labs(y='Fos Expression', title = '', x = '') +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
-  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
-  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
-        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Ghrh.Chat_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+  theme(plot.title = element_text(family = 'Arial', size = 10, color = 'black', hjust = 0.5),
+        axis.title=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.y=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.x=element_text(family = 'Arial', size = 8, color = 'black'),
+        legend.position = 'none')
+ggsave('figures/Fos_in_Ghrh.Chat_barplot', device = 'tiff', units = 'in', width = 4, height = 2, dpi = 600)
+
+FindMarkers(Ghrh.Chat_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'F_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
+FindMarkers(Ghrh.Chat_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'M_Fed', 
+            ident.2 = 'M_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Ghrh/Chat', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
-  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
-  geom_point(inherit.aes = F, data = filter(Ghrh.Chat.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  geom_point(inherit.aes = F, data = filter(Ghrh.Chat.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Ghrh.Chat.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
-                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
-  theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
-  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
-  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
-        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Ghrh.Chat_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+FindMarkers(Ghrh.Chat_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'M_Fed', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
 
 
 
@@ -1183,37 +1531,86 @@ ggsave(filename = 'figures/Ghrh.Chat_male_fed_vs_fasted_volc.tiff', device = 'ti
 ####
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Ghrh/Chat', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+
+
+
+
+saveRDS(Ghrh.Chat_Sex_by_Nutr, file = 'data/Ghrh.Chat_Sex_by_Nutr.rds')
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Ghrh/Chat', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Ghrh.Chat.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Ghrh.Chat.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Ghrh.Chat.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/Ghrh.Chat_female_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Ghrh/Chat', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Ghrh.Chat.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Ghrh.Chat.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Ghrh.Chat.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/Ghrh.Chat_male_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+
+####
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Ghrh/Chat', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(Ghrh.Chat.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(Ghrh.Chat.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Ghrh.Chat.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(Ghrh.Chat.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Ghrh.Chat_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/Ghrh.Chat_fed_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Ghrh/Chat', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Ghrh/Chat', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(Ghrh.Chat.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(Ghrh.Chat.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Ghrh.Chat.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(Ghrh.Chat.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Ghrh.Chat_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/Ghrh.Chat_fasted_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 library(gprofiler2)
 ######20240516#######
@@ -1223,6 +1620,10 @@ Ghrh.Chat.F.Fd.Fst.suppress.gost <- gost(query = (Ghrh.Chat.F.Fd.v.Fst |> filter
 Ghrh.Chat.F.Fd.Fst.induce.gost <- gost(query = (Ghrh.Chat.F.Fd.v.Fst |> filter(p_val_adj < 0.05, avg_log2FC < 0) |> select(gene) |> as.list()) ,
                                   organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 
+
+
+#write.xlsx(Ghrh.Chat.F.Fd.Fst.suppress.gost$result[c(2,5,6,8,10),c(9,11,3)], 
+ #          file = "../paper_figures/post_2025-01-06/GOMF_Tables/Ghrh/Ghrh_F_Fd_Fst_suppress.xlsx")
 
 
 
@@ -1240,6 +1641,10 @@ Ghrh.Chat.F.Fd.Fst.suppress.gost$result[c(2,5,6,8,10),] |> ggplot(aes(-log10(p_v
 ggsave(filename = 'figures/Ghrh.Chat_fasting_suppressed_in_female_GOMF.tiff', device = 'tiff', units = 'in', width = 3.75, height = 1.5, dpi = 600)
 
 
+
+
+#write.xlsx(Ghrh.Chat.F.Fd.Fst.induce.gost$result[c(2,3,4,10,16),c(9,11,3)], 
+ #          file = "../paper_figures/post_2025-01-06/GOMF_Tables/Ghrh/Ghrh_F_Fd_Fst_induce.xlsx")
 
 
 
@@ -1268,6 +1673,12 @@ Ghrh.Chat.M.Fd.Fst.induce.gost <- gost(query = (Ghrh.Chat.M.Fd.v.Fst |> filter(p
 
 ####20240517#####
 
+
+#write.xlsx(Ghrh.Chat.M.Fd.Fst.suppress.gost$result[,c(9,11,3)], 
+ #          file = "../paper_figures/post_2025-01-06/GOMF_Tables/Ghrh/Ghrh_M_Fd_Fst_suppress.xlsx")
+
+
+
 Ghrh.Chat.M.Fd.Fst.suppress.gost$result |> ggplot(aes(-log10(p_value), 
                                                                    factor(term_name))) + 
   geom_col(fill = '#19552b', color = 'black') +
@@ -1279,7 +1690,7 @@ ggsave(filename = 'figures/Ghrh.Chat_fasting_suppressed_in_males_GOMF.tiff', dev
 
 
 
-
+#no results
 
 Ghrh.Chat.M.Fd.Fst.induce.gost$result |> ggplot(aes(-log10(p_value), 
                                                                 factor(term_name))) + 
@@ -1304,6 +1715,12 @@ Ghrh.Chat.Fd.male.higher.gost <- gost(query = (Ghrh.Chat.Fd.F.v.M |> filter(p_va
 
 
 
+#write.xlsx(Ghrh.Chat.Fd.female.higher.gost$result[,c(9,11,3)], 
+ #          file = "../paper_figures/post_2025-01-06/GOMF_Tables/Ghrh/Ghrh_Fd_Female_higher.xlsx")
+
+
+
+
 Ghrh.Chat.Fd.female.higher.gost$result |> ggplot(aes(-log10(p_value), 
                                                                 factor(term_name))) + 
   geom_col(fill = '#6a816a', color = 'black') +
@@ -1314,6 +1731,10 @@ Ghrh.Chat.Fd.female.higher.gost$result |> ggplot(aes(-log10(p_value),
 ggsave(filename = 'figures/Ghrh.Chat_higher_in_fed_females_GOMF.tiff', device = 'tiff', units = 'in', width = 3.5, height = 1.5, dpi = 600)
 
 
+
+
+#write.xlsx(Ghrh.Chat.Fd.male.higher.gost$result[,c(9,11,3)], 
+ #          file = "../paper_figures/post_2025-01-06/GOMF_Tables/Ghrh/Ghrh_Fd_Male_higher.xlsx")
 
 
 
@@ -1342,6 +1763,12 @@ Ghrh.Chat.Fst.male.higher.gost <- gost(query = (Ghrh.Chat.Fst.F.v.M |> filter(p_
 
 
 
+#write.xlsx(Ghrh.Chat.Fst.female.higher.gost$result[,c(9,11,3)], 
+ #          file = "../paper_figures/post_2025-01-06/GOMF_Tables/Ghrh/Ghrh_Fst_Female_higher.xlsx")
+
+
+
+
 Ghrh.Chat.Fst.female.higher.gost$result |> ggplot(aes(-log10(p_value), 
                                                                 factor(term_name))) + 
   geom_col(fill = '#f9994f', color = 'black') +
@@ -1352,6 +1779,10 @@ Ghrh.Chat.Fst.female.higher.gost$result |> ggplot(aes(-log10(p_value),
 ggsave(filename = 'figures/Ghrh.Chat_higher_in_fasted_females_GOMF.tiff', device = 'tiff', units = 'in', width = 5, height = 1.5, dpi = 600)
 
 
+
+
+#write.xlsx(Ghrh.Chat.Fst.male.higher.gost$result[,c(9,11,3)], 
+ #          file = "../paper_figures/post_2025-01-06/GOMF_Tables/Ghrh/Ghrh_Fst_Male_higher.xlsx")
 
 
 
@@ -1376,7 +1807,7 @@ ggsave(filename = 'figures/Ghrh.Chat_higher_in_fasted_males_GOMF.tiff', device =
 
 #create basic clustering for sample
 ARH_Sex_by_Nutr <- readRDS('data/ARH_Sex_by_Nutr.rds')
-#Microglia_Sex_by_Nutr <- readRDS('data/Microglia_Sex_by_Nutr.rds')
+Microglia_Sex_by_Nutr <- readRDS('data/Microglia_Sex_by_Nutr.rds')
 
 Microglia_Sex_by_Nutr <- subset(ARH_Sex_by_Nutr, subset = cell_type3 == 'Microglia')
 
@@ -1486,40 +1917,127 @@ FeaturePlot(Microglia_Sex_by_Nutr, label = FALSE,
 ggsave('figures/Microglia_m_fast_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
 
 
-saveRDS(Microglia_Sex_by_Nutr, file = 'data/Microglia_Sex_by_Nutr.rds')
+
+ggsave('figures/Microglia_sex_by_nutr_dimplot.tiff', device = 'tiff', units = 'in', width = 4.5,height = 3.5,dpi = 600)
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Microglia', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
-  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
-  geom_point(inherit.aes = F, data = filter(Microglia.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
-  geom_point(inherit.aes = F, data = filter(Microglia.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Microglia.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
-                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+FeaturePlot(Microglia_Sex_by_Nutr, label = FALSE, 
+            features = 'F_Fed', reduction = 'tsne',
+            pt.size = 1, order = T,
+            cols = c('lightgrey','#6a816a')) + 
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+
+
+ggsave('figures/Microglia_f_fed_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+
+FeaturePlot(Microglia_Sex_by_Nutr, label = FALSE, 
+            features = 'F_Fast', reduction = 'tsne', 
+            pt.size = 1, order = TRUE,
+            cols = c('lightgrey','#f9994f')) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+
+
+ggsave('figures/Microglia_f_fast_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+FeaturePlot(Microglia_Sex_by_Nutr, label = FALSE, 
+            features = 'M_Fed', reduction = 'tsne',
+            pt.size = 1, order = TRUE,
+            cols = c('lightgrey','#19552b')) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+
+
+ggsave('figures/Microglia_m_fed_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+
+FeaturePlot(Microglia_Sex_by_Nutr, label = FALSE, 
+            features = 'Fos', reduction = 'tsne', cols = c('grey','darkred'), max.cutoff = 1,
+            pt.size = 1, order = TRUE) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+
+ggsave('figures/Microglia_fos_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+
+
+###barplot for fos in Microglia####
+
+Microglia_Sex_by_Nutr$SCT@data[c('Th','Fos'),] %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  cbind(Microglia_Sex_by_Nutr@meta.data[,c(1:5)]) %>% 
+  ggplot(aes(sexXnutr, Fos)) +
+  stat_summary(geom = 'bar', color = 'black', aes(fill = sexXnutr), width = 0.8) +
+  stat_summary(geom = 'errorbar', color = 'black', width = 0.3) +
+  scale_fill_manual(values = c('#f9994f','#6a816a','#ff6e00','#19552b')) +
+  scale_x_discrete(limits = c('F_Fed', 'F_Fast','M_Fed', 'M_Fast'), labels = c('Fed','Fasted','Fed','Fasted')) +
+  labs(y='Fos Expression', title = '', x = '') +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
-  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
-  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
-        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Microglia_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+  theme(plot.title = element_text(family = 'Arial', size = 10, color = 'black', hjust = 0.5),
+        axis.title=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.y=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.x=element_text(family = 'Arial', size = 8, color = 'black'),
+        legend.position = 'none')
+ggsave('figures/Fos_in_Microglia_barplot', device = 'tiff', units = 'in', width = 4, height = 2, dpi = 600)
+
+FindMarkers(Microglia_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'F_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
+FindMarkers(Microglia_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'M_Fed', 
+            ident.2 = 'M_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Microglia', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
-  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
-  geom_point(inherit.aes = F, data = filter(Microglia.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  geom_point(inherit.aes = F, data = filter(Microglia.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Microglia.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
-                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
-  theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
-  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
-  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
-        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Microglia_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+FindMarkers(Microglia_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'M_Fed', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
 
 
 
@@ -1527,37 +2045,85 @@ ggsave(filename = 'figures/Microglia_male_fed_vs_fasted_volc.tiff', device = 'ti
 ####
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Microglia', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+
+
+
+saveRDS(Microglia_Sex_by_Nutr, file = 'data/Microglia_Sex_by_Nutr.rds')
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Microglia', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Microglia.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Microglia.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Microglia.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.7), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/Microglia_female_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Microglia', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Microglia.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Microglia.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Microglia.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.7), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/Microglia_male_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+
+####
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Microglia', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(Microglia.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(Microglia.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Microglia.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(Microglia.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,3.13)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Microglia_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/Microglia_fed_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Microglia', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Microglia', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(Microglia.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(Microglia.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Microglia.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(Microglia.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,3.1)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Microglia_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/Microglia_fasted_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 #library(gprofiler2)
 
@@ -1568,6 +2134,9 @@ Microglia.F.Fd.Fst.induce.gost <- gost(query = (Microglia.F.Fd.v.Fst |> filter(p
                                   organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 
 
+
+write.xlsx(Microglia.F.Fd.Fst.induce.gost$result[c(1:5),c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Microglia/Microglia_F_Fd_Fst_induce.xlsx")
 
 
 
@@ -1595,6 +2164,10 @@ Microglia.M.Fd.Fst.induce.gost <- gost(query = (Microglia.M.Fd.v.Fst |> filter(p
 
 
 
+
+
+write.xlsx(Microglia.M.Fd.Fst.induce.gost$result[c(1:5),c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Microglia/Microglia_M_Fd_Fst_induce.xlsx")
 
 
 
@@ -1639,6 +2212,10 @@ Microglia.Fst.male.higher.gost <- gost(query = (Microglia.Fst.F.v.M |> filter(p_
 
 
 
+write.xlsx(Microglia.Fst.male.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Microglia/Microglia_Fst_Male_higher.xlsx")
+
+
 
 
 Microglia.Fst.male.higher.gost$result[c(1:5),] |> ggplot(aes(-log10(p_value), 
@@ -1663,7 +2240,7 @@ ggsave(filename = 'figures/Microglia_higher_in_fasted_males_GOMF.tiff', device =
 
 #create basic clustering for sample
 ARH_Sex_by_Nutr <- readRDS('data/ARH_Sex_by_Nutr.rds')
-#Oligo_Sex_by_Nutr <- readRDS('data/Oligo_Sex_by_Nutr.rds')
+Oligo_Sex_by_Nutr <- readRDS('data/Oligo_Sex_by_Nutr.rds')
 
 Oligo_Sex_by_Nutr <- subset(ARH_Sex_by_Nutr, subset = cell_type3 == 'Oligodendrocytes')
 
@@ -1773,40 +2350,75 @@ FeaturePlot(Oligo_Sex_by_Nutr, label = FALSE,
 ggsave('figures/Oligo_m_fast_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
 
 
-saveRDS(Oligo_Sex_by_Nutr, file = 'data/Oligo_Sex_by_Nutr.rds')
+
+FeaturePlot(Oligo_Sex_by_Nutr, label = FALSE, 
+            features = 'Fos', reduction = 'tsne', cols = c('grey','darkred'), max.cutoff = 1,
+            pt.size = 1, order = TRUE) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Oligodendrocytes', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
-  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
-  geom_point(inherit.aes = F, data = filter(Oligo.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
-  geom_point(inherit.aes = F, data = filter(Oligo.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Oligo.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
-                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+ggsave('figures/Oligo_fos_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+
+
+###barplot for fos in Microglia####
+
+Oligo_Sex_by_Nutr$SCT@data[c('Th','Fos'),] %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  cbind(Oligo_Sex_by_Nutr@meta.data[,c(1:5)]) %>% 
+  ggplot(aes(sexXnutr, Fos)) +
+  stat_summary(geom = 'bar', color = 'black', aes(fill = sexXnutr), width = 0.8) +
+  stat_summary(geom = 'errorbar', color = 'black', width = 0.3) +
+  scale_fill_manual(values = c('#f9994f','#6a816a','#ff6e00','#19552b')) +
+  scale_x_discrete(limits = c('F_Fed', 'F_Fast','M_Fed', 'M_Fast'), labels = c('Fed','Fasted','Fed','Fasted')) +
+  labs(y='Fos Expression', title = '', x = '') +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
-  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
-  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
-        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Oligo_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+  theme(plot.title = element_text(family = 'Arial', size = 10, color = 'black', hjust = 0.5),
+        axis.title=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.y=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.x=element_text(family = 'Arial', size = 8, color = 'black'),
+        legend.position = 'none')
+ggsave('figures/Fos_in_Oligo_barplot', device = 'tiff', units = 'in', width = 4, height = 2, dpi = 600)
+
+FindMarkers(Oligo_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'F_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
+FindMarkers(Oligo_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'M_Fed', 
+            ident.2 = 'M_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Oligodendrocytes', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
-  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
-  geom_point(inherit.aes = F, data = filter(Oligo.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  geom_point(inherit.aes = F, data = filter(Oligo.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
-             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Oligo.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
-                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
-  theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
-  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
-  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
-        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Oligo_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+FindMarkers(Oligo_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'M_Fed', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
 
 
 
@@ -1814,37 +2426,83 @@ ggsave(filename = 'figures/Oligo_male_fed_vs_fasted_volc.tiff', device = 'tiff',
 ####
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Oligodendrocytes', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+
+saveRDS(Oligo_Sex_by_Nutr, file = 'data/Oligo_Sex_by_Nutr.rds')
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Oligodendrocytes', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Oligo.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Oligo.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Oligo.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/Oligo_female_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Oligodendrocytes', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Oligo.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Oligo.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Oligo.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/Oligo_male_fed_vs_fasted_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+
+####
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Oligodendrocytes', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(Oligo.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(Oligo.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Oligo.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(Oligo.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Oligo_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/Oligo_fed_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 
 
-FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Oligodendrocytes', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', logfc.threshold = 0, min.pct = 0, pseudocount.use = 0) |> 
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Oligodendrocytes', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
   ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
   geom_point(inherit.aes = F, data = filter(Oligo.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
   geom_point(inherit.aes = F, data = filter(Oligo.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
              aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
-  ggrepel::geom_text_repel(data = filter(Oligo.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 2), 
+  ggrepel::geom_text_repel(data = filter(Oligo.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  coord_cartesian(xlim = c(-10,10)) +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
-ggsave(filename = 'figures/Oligo_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+ggsave(filename = 'figures/Oligo_fasted_female_vs_male_volc2.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
 
 #library(gprofiler2)
 
@@ -1854,6 +2512,10 @@ Oligo.F.Fd.Fst.suppress.gost <- gost(query = (Oligo.F.Fd.v.Fst |> filter(p_val_a
 Oligo.F.Fd.Fst.induce.gost <- gost(query = (Oligo.F.Fd.v.Fst |> filter(p_val_adj < 0.05, avg_log2FC < 0) |> select(gene) |> as.list()) ,
                                        organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 
+
+
+#write.xlsx(Oligo.F.Fd.Fst.suppress.gost$result[,c(9,11,3)], 
+ #          file = "../paper_figures/post_2025-01-06/GOMF_Tables/Oligo/Oligo_F_Fd_Fst_suppress.xlsx")
 
 
 
@@ -1868,6 +2530,10 @@ Oligo.F.Fd.Fst.suppress.gost$result |> ggplot(aes(-log10(p_value),
 ggsave(filename = 'figures/Oligo_fasting_suppressed_GOMF.tiff', device = 'tiff', units = 'in', width = 3.5, height = 1.5, dpi = 600)
 
 
+
+
+#write.xlsx(Oligo.F.Fd.Fst.induce.gost$result[c(1:3,5,6),c(9,11,3)], 
+ #          file = "../paper_figures/post_2025-01-06/GOMF_Tables/Oligo/Oligo_F_Fd_Fst_induce.xlsx")
 
 
 
@@ -1895,6 +2561,10 @@ Oligo.M.Fd.Fst.induce.gost <- gost(query = (Oligo.M.Fd.v.Fst |> filter(p_val_adj
 
 
 
+#write.xlsx(Oligo.M.Fd.Fst.suppress.gost$result[c(2,3,6,7,8),c(9,11,3)], 
+ #          file = "../paper_figures/post_2025-01-06/GOMF_Tables/Oligo/Oligo_M_Fd_Fst_suppress.xlsx")
+
+
 
 Oligo.M.Fd.Fst.suppress.gost$result[c(2,3,6,7,8),] |> ggplot(aes(-log10(p_value), 
                                                                         factor(term_name, levels = c('Rho GDP-dissociation inhibitor binding',
@@ -1910,6 +2580,10 @@ Oligo.M.Fd.Fst.suppress.gost$result[c(2,3,6,7,8),] |> ggplot(aes(-log10(p_value)
 ggsave(filename = 'figures/Oligo_fasting_suppressed_in_males_GOMF.tiff', device = 'tiff', units = 'in', width = 3.5, height = 1.5, dpi = 600)
 
 
+
+
+write.xlsx(Oligo.M.Fd.Fst.induce.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Oligo/Oligo_M_Fd_Fst_induce.xlsx")
 
 
 
@@ -1932,6 +2606,7 @@ ggsave(filename = 'figures/Oligo_fasting_induced_in_males_GOMF.tiff', device = '
 
 Oligo.Fd.female.higher.gost <- gost(query = (Oligo.Fd.F.v.M |> filter(p_val_adj < 0.05, avg_log2FC > 0) |> select(gene) |> as.list()) ,
                                         organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
+
 Oligo.Fd.male.higher.gost <- gost(query = (Oligo.Fd.F.v.M |> filter(p_val_adj < 0.05, avg_log2FC < 0) |> select(gene) |> as.list()) ,
                                       organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 
@@ -1948,6 +2623,10 @@ Oligo.Fst.female.higher.gost <- gost(query = (Oligo.Fst.F.v.M |> filter(p_val_ad
 Oligo.Fst.male.higher.gost <- gost(query = (Oligo.Fst.F.v.M |> filter(p_val_adj < 0.05, avg_log2FC < 0) |> select(gene) |> as.list()) ,
                                        organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
 
+
+
+write.xlsx(Oligo.Fst.female.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Oligo/Oligo_Fst_Female_higher.xlsx")
 
 
 
@@ -1967,3 +2646,317 @@ ggsave(filename = 'figures/Oligo_higher_in_fasted_females_GOMF.tiff', device = '
 
 
 
+####POMC####
+
+
+
+Pomc_Sex_by_Nutr <- subset(ARH_Sex_by_Nutr, subset = cell_type3 == 'Pomc')
+
+Pomc_Sex_by_Nutr <- SCTransform(Pomc_Sex_by_Nutr, verbose = TRUE, do.scale = FALSE, do.center = FALSE, assay = 'RNA')
+
+
+Pomc_Sex_by_Nutr@assays$SCT@var.features <- Pomc_Sex_by_Nutr@assays$SCT@var.features[(!Pomc_Sex_by_Nutr@assays$SCT@var.features %in% c(yx_chrom_genes,mito.genes,hemoglobin_genes,ribo.genes))]
+
+Pomc_Sex_by_Nutr <- RunPCA(Pomc_Sex_by_Nutr, features = VariableFeatures(object = Pomc_Sex_by_Nutr))
+Pomc_Sex_by_Nutr <- RunTSNE(Pomc_Sex_by_Nutr, reduction = "pca", dims = 1:30)
+
+Pomc_Sex_by_Nutr <- FindNeighbors(Pomc_Sex_by_Nutr, dims = 1:30)
+Pomc_Sex_by_Nutr <- FindClusters(Pomc_Sex_by_Nutr, resolution = 0.5)
+
+DimPlot(Pomc_Sex_by_Nutr, label = TRUE, label.size = 8, repel = FALSE, reduction = 'tsne') + 
+  NoLegend() +
+  theme(axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank())
+
+
+
+
+DimPlot(Pomc_Sex_by_Nutr, label = F, label.size = 2,pt.size = 1, repel = TRUE, 
+        shuffle = TRUE, group.by = 'sexXnutr', reduction = 'tsne',
+        cols = c('#f9994f','#6a816a','#ff6e00','#19552b')) &
+  theme(plot.title = element_blank(),
+        legend.text = element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank())
+ggsave('figures/Pomc_sex_by_nutr_dimplot.tiff', device = 'tiff', units = 'in', width = 4.5,height = 3.5,dpi = 600)
+
+
+FeaturePlot(Pomc_Sex_by_Nutr, label = FALSE, 
+            features = 'F_Fed', reduction = 'tsne',
+            pt.size = 1, order = T,
+            cols = c('lightgrey','#6a816a')) + 
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+
+
+ggsave('figures/Pomc_f_fed_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+
+FeaturePlot(Pomc_Sex_by_Nutr, label = FALSE, 
+            features = 'F_Fast', reduction = 'tsne', 
+            pt.size = 1, order = TRUE,
+            cols = c('lightgrey','#f9994f')) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+
+
+ggsave('figures/Pomc_f_fast_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+FeaturePlot(Pomc_Sex_by_Nutr, label = FALSE, 
+            features = 'M_Fed', reduction = 'tsne',
+            pt.size = 1, order = TRUE,
+            cols = c('lightgrey','#19552b')) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+
+
+ggsave('figures/Pomc_m_fed_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+
+FeaturePlot(Pomc_Sex_by_Nutr, label = FALSE, 
+            features = 'M_Fast', reduction = 'tsne',
+            pt.size = 1, order = TRUE,
+            cols = c('lightgrey','#ff6e00')) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+
+
+ggsave('figures/Pomc_m_fast_dimplot.tiff', device = 'tiff', units = 'in', width = 3.5,height = 3.5,dpi = 600)
+
+
+
+FeaturePlot(Pomc_Sex_by_Nutr, label = FALSE, 
+            features = 'Fos', reduction = 'tsne', max.cutoff = 1,
+            pt.size = 1, order = TRUE, cols = c('grey','darkred')) +
+  NoLegend() + 
+  labs(title = "", x = '', y = '') +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line = element_blank(),
+        plot.title = element_text(family = 'Arial', size = 10))
+ggsave('figures/Pomc_fos_dimplot.tiff', device = 'tiff', units = 'in', width = 3.25,height = 3.25,dpi = 600)
+
+
+saveRDS(Pomc_Sex_by_Nutr, file = 'data/Pomc_Sex_by_Nutr.rds')
+
+#Pomc.F.Fd.v.Fst$p_val_adj[1] = Pomc.F.Fd.v.Fst$p_val_adj[2]
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Pomc', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.7), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/Pomc_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Pomc', group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0,test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.7), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/Pomc_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+
+####
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Pomc', group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/Pomc_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+FindMarkers(ARH_Sex_by_Nutr, subset.ident = 'Pomc', group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures/Pomc_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+###barplot for fos in POMC####
+
+Pomc_Sex_by_Nutr$SCT@data[c('Pomc','Fos'),] %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  cbind(Pomc_Sex_by_Nutr@meta.data[,c(1:5)]) %>% 
+  ggplot(aes(sexXnutr, Fos)) +
+  stat_summary(geom = 'bar', color = 'black', aes(fill = sexXnutr), width = 0.8) +
+  stat_summary(geom = 'errorbar', color = 'black', width = 0.3) +
+  scale_fill_manual(values = c('#f9994f','#6a816a','#ff6e00','#19552b')) +
+  scale_x_discrete(limits = c('F_Fed', 'F_Fast','M_Fed', 'M_Fast'), labels = c('Fed','Fasted','Fed','Fasted')) +
+  labs(y='Fos Expression', title = '', x = '') +
+  theme_classic() +
+  theme(plot.title = element_text(family = 'Arial', size = 10, color = 'black', hjust = 0.5),
+        axis.title=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.y=element_text(family = 'Arial', size = 8, color = 'black'),
+        axis.text.x=element_text(family = 'Arial', size = 8, color = 'black'),
+        legend.position = 'none')
+ggsave('figures/Fos_in_Pomc_barplot', device = 'tiff', units = 'in', width = 4, height = 2, dpi = 600)
+
+FindMarkers(Pomc_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'F_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
+FindMarkers(Pomc_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'M_Fed', 
+            ident.2 = 'M_Fast', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
+
+
+FindMarkers(Pomc_Sex_by_Nutr, 
+            features = 'Fos',
+            group.by = 'sexXnutr', 
+            ident.1 = 'F_Fed', 
+            ident.2 = 'M_Fed', 
+            logfc.threshold = 0, 
+            min.pct = 0, 
+            pseudocount.use = 0)
+
+
+
+
+
+####
+
+
+Pomc.F.Fd.Fst.suppress.gost <- gost(query = (Pomc.F.Fd.v.Fst |> filter(p_val_adj < 0.05, avg_log2FC > 0) |> select(gene) |> as.list()) ,
+                                    organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
+Pomc.F.Fd.Fst.induce.gost <- gost(query = (Pomc.F.Fd.v.Fst |> filter(p_val_adj < 0.05, avg_log2FC < 0) |> select(gene) |> as.list()) ,
+                                  organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
+
+
+write.xlsx(Pomc.F.Fd.Fst.suppress.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Pomc/Pomc_F_Fd_Fst_suppress.xlsx")
+write.xlsx(Pomc.F.Fd.Fst.induce.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Pomc/Pomc_F_Fd_Fst_induce.xlsx")
+
+
+
+Pomc.M.Fd.Fst.suppress.gost <- gost(query = (Pomc.M.Fd.v.Fst |> filter(p_val_adj < 0.05, avg_log2FC > 0) |> select(gene) |> as.list()) ,
+                                    organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
+Pomc.M.Fd.Fst.induce.gost <- gost(query = (Pomc.M.Fd.v.Fst |> filter(p_val_adj < 0.05, avg_log2FC < 0) |> select(gene) |> as.list()) ,
+                                  organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
+
+
+write.xlsx(Pomc.M.Fd.Fst.suppress.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Pomc/Pomc_M_Fd_Fst_suppress.xlsx")
+write.xlsx(Pomc.M.Fd.Fst.induce.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Pomc/Pomc_M_Fd_Fst_induce.xlsx")
+
+
+Pomc.Fd.female.higher.gost <- gost(query = (Pomc.Fd.F.v.M |> filter(p_val_adj < 0.05, avg_log2FC > 0) |> select(gene) |> as.list()) ,
+                                   organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
+Pomc.Fd.male.higher.gost <- gost(query = (Pomc.Fd.F.v.M |> filter(p_val_adj < 0.05, avg_log2FC < 0) |> select(gene) |> as.list()) ,
+                                 organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
+
+
+write.xlsx(Pomc.Fd.female.higher.gost$result[c(1:5),c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Pomc/Pomc_Fd_Female_higher.xlsx")
+
+write.xlsx(Pomc.Fd.male.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Pomc/Pomc_Fd_Male_higher.xlsx")
+
+
+Pomc.Fst.female.higher.gost <- gost(query = (Pomc.Fst.F.v.M |> filter(p_val_adj < 0.05, avg_log2FC > 0) |> select(gene) |> as.list()) ,
+                                   organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
+Pomc.Fst.male.higher.gost <- gost(query = (Pomc.Fst.F.v.M |> filter(p_val_adj < 0.05, avg_log2FC < 0) |> select(gene) |> as.list()) ,
+                                 organism = 'mmusculus', sources = 'GO:MF', exclude_iea = T)
+
+
+write.xlsx(Pomc.Fst.female.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Pomc/Pomc_Fst_Female_higher.xlsx")
+
+write.xlsx(Pomc.Fst.male.higher.gost$result[,c(9,11,3)], 
+           file = "../paper_figures/post_2025-04-07/GOMF_Tables/Pomc/Pomc_Fst_Male_higher.xlsx")

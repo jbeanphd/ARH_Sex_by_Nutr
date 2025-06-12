@@ -1,3 +1,4 @@
+devtools::install_github("jinworks/CellChat")
 libs <- c( 'gplots','stringi','reshape2','cowplot','RColorBrewer',
            'sctransform','stringr','org.Mm.eg.db','AnnotationDbi',
            'IRanges','S4Vectors','Biobase','BiocGenerics','clusterProfiler',
@@ -190,10 +191,10 @@ saveRDS(ARH.F.M.Fd.Fst.CC, file = 'data/ARH.F.M.Fd.Fst.CC.rds')
 
 
 #ARH.F.M.Fd.Fst.CC <- readRDS('data3/ARH.F.M.Fd.Fst.CC.rds')
-F_Fed_ARH_CC <- readRDS('data3/F_Fed_ARH_CC.rds')
-F_Fast_ARH_CC <- readRDS('data3/F_Fast_ARH_CC.rds')
-M_Fed_ARH_CC <- readRDS('data3/M_Fed_ARH_CC.rds')
-M_Fast_ARH_CC <- readRDS('data3/M_Fast_ARH_CC.rds')
+F_Fed_ARH_CC <- readRDS('data/F_Fed_ARH_CC.rds')
+F_Fast_ARH_CC <- readRDS('data/F_Fast_ARH_CC.rds')
+M_Fed_ARH_CC <- readRDS('data/M_Fed_ARH_CC.rds')
+M_Fast_ARH_CC <- readRDS('data/M_Fast_ARH_CC.rds')
 
 object.list = list(F_Fed = F_Fed_ARH_CC, 
                    F_Fast = F_Fast_ARH_CC, 
@@ -259,13 +260,13 @@ gene.F_Fed <- extractGeneSubsetFromPair(net.F_Fed, ARH.F.Fd.v.Fst.CC)
 #par(mfrow = c(1,2), xpd=TRUE)
 netVisual_chord_gene(object.list[[1]], slot.name = 'net', 
                      net = net.F_Fed, lab.cex = 1, small.gap = 3.5,
-                     sources.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     sources.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Fasting Suppressed in Females')
 
 
 netVisual_chord_gene(object.list[[2]], slot.name = 'net', 
                      net = net.F_Fast, lab.cex = 1, small.gap = 3.5,
-                     sources.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     sources.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Fasting Induced in Females')
 
 
@@ -278,13 +279,13 @@ netR.F_Fed <- subsetCommunication(ARH.F.Fd.v.Fst.CC, net = F_net, datasets = "F_
 
 netVisual_chord_gene(object.list[[1]], slot.name = 'net', 
                      net = netR.F_Fed, lab.cex = 1, small.gap = 3.5,
-                     targets.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     targets.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Fasting Suppressed in Females')
 
 
 netVisual_chord_gene(object.list[[2]], slot.name = 'net', 
                      net = netR.F_Fast, lab.cex = 1, small.gap = 3.5,
-                     targets.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     targets.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Fasting Induced in Females')
 
 
@@ -319,13 +320,13 @@ gene.M_Fed <- extractGeneSubsetFromPair(net.M_Fed, ARH.M.Fd.v.Fst.CC)
 
 netVisual_chord_gene(object.list[[3]], slot.name = 'net', 
                      net = net.M_Fed, lab.cex = 1, small.gap = 3.5,
-                     sources.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     sources.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Fasting Suppressed in Males')
 
 
 netVisual_chord_gene(object.list[[4]], slot.name = 'net', 
                      net = net.M_Fast, lab.cex = 1, small.gap = 3.5,
-                     sources.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     sources.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Fasting Induced in Males')
 
 
@@ -342,13 +343,13 @@ netR.M_Fed <- subsetCommunication(ARH.M.Fd.v.Fst.CC, net = M_net, datasets = "M_
 
 netVisual_chord_gene(object.list[[1]], slot.name = 'net', 
                      net = netR.M_Fed, lab.cex = 1, small.gap = 3.5,
-                     targets.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     targets.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Fasting Suppressed in Males')
 
 
 netVisual_chord_gene(object.list[[2]], slot.name = 'net', 
                      net = netR.M_Fast, lab.cex = 1, small.gap = 3.5,
-                     targets.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     targets.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Fasting Induced in Males')
 
 
@@ -411,7 +412,7 @@ gene.M_Fed_sx <- extractGeneSubsetFromPair(net.M_Fed_sx, ARH.Fd.F.v.M.CC)
 
 netVisual_chord_gene(object.list[[1]], slot.name = 'net',
                      net = net.F_Fed_sx, lab.cex = 1, small.gap = 3.5,
-                     sources.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     sources.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Greater in Fed Females',
                      link.visible = T)
 
@@ -419,7 +420,7 @@ netVisual_chord_gene(object.list[[1]], slot.name = 'net',
 
 netVisual_chord_gene(object.list[[3]], slot.name = 'net', 
                      net = net.M_Fed_sx, lab.cex = 1, small.gap = 3.5,
-                     sources.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     sources.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Greater in Fed Males')
 
 
@@ -431,7 +432,7 @@ netR.M_Fed_sx <- subsetCommunication(ARH.Fd.F.v.M.CC, net = Fd_net, datasets = "
 
 netVisual_chord_gene(object.list[[1]], slot.name = 'net',
                      net = netR.F_Fed_sx, lab.cex = 1, small.gap = 3.5, big.gap = 10,
-                     targets.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     targets.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Greater in Fed Females',
                      link.visible = T)
 
@@ -439,7 +440,7 @@ netVisual_chord_gene(object.list[[1]], slot.name = 'net',
 
 netVisual_chord_gene(object.list[[3]], slot.name = 'net', 
                      net = netR.M_Fed_sx, lab.cex = 1, small.gap = 3.5,
-                     targets.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     targets.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Greater in Fed Males')
 
 
@@ -467,13 +468,13 @@ gene.M_Fast_sx <- extractGeneSubsetFromPair(net.M_Fast_sx, ARH.Fst.F.v.M.CC)
 
 netVisual_chord_gene(object.list[[2]], slot.name = 'net',
                      net = net.F_Fast_sx, lab.cex = 1, small.gap = 3.5,
-                     sources.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     sources.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Greater in Fasted Females')
 
 
 netVisual_chord_gene(object.list[[4]], slot.name = 'net',
                      net = net.M_Fast_sx, lab.cex = 1, small.gap = 3.5,
-                     sources.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     sources.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Greater in Fasted Males')
 
 
@@ -485,7 +486,7 @@ netR.M_Fast_sx <- subsetCommunication(ARH.Fst.F.v.M.CC, net = Fst_net, datasets 
 
 netVisual_chord_gene(object.list[[2]], slot.name = 'net',
                      net = netR.F_Fast_sx, lab.cex = 1, small.gap = 3.5, big.gap = 10,
-                     targets.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     targets.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Greater in Fasted Females',
                      link.visible = T)
 
@@ -493,7 +494,7 @@ netVisual_chord_gene(object.list[[2]], slot.name = 'net',
 
 netVisual_chord_gene(object.list[[4]], slot.name = 'net', 
                      net = netR.M_Fast_sx, lab.cex = 1, small.gap = 3.5,
-                     targets.use = c('Agrp','KNDy','DA','Ghrh/Chat','Oligodendrocytes','Microglia'),
+                     targets.use = c('Agrp','KNDy','DA','Pomc','Oligodendrocytes','Microglia'),
                      title.name = 'Greater in Fasted Males')
 
 

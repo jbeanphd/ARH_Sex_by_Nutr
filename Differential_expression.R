@@ -25,7 +25,10 @@ Agrp.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'F_Fast', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
+
 
 Agrp.F.Fd.v.Fst$gene <- Agrp.F.Fd.v.Fst |> row.names()
 ensembl = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
@@ -35,6 +38,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Agrp.F.Fd.v.Fst <- left_join(Agrp.F.Fd.v.Fst, temp01, by = "gene")
 
+write.xlsx(Agrp.F.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/Agrp/Agrp_F_Fd_v_Fst.xlsx')
 
 
 Agrp.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr, 
@@ -44,7 +48,9 @@ Agrp.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fast', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Agrp.M.Fd.v.Fst$gene <- Agrp.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -53,7 +59,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Agrp.M.Fd.v.Fst <- left_join(Agrp.M.Fd.v.Fst, temp01, by = "gene")
 
-
+write.xlsx(Agrp.M.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/Agrp/Agrp_M_Fd_v_Fst.xlsx')
 
 Agrp.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                                subset.ident = 'Agrp', 
@@ -62,7 +68,9 @@ Agrp.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fed', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Agrp.Fd.F.v.M$gene <- Agrp.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -71,7 +79,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Agrp.Fd.F.v.M <- left_join(Agrp.Fd.F.v.M, temp01, by = "gene")
 
-
+write.xlsx(Agrp.Fd.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/Agrp/Agrp_Fd_F_v_M.xlsx')
 
 Agrp.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                              subset.ident = 'Agrp', 
@@ -80,7 +88,9 @@ Agrp.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fast', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Agrp.Fst.F.v.M$gene <- Agrp.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -89,7 +99,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Agrp.Fst.F.v.M <- left_join(Agrp.Fst.F.v.M, temp01, by = "gene")
 
-
+write.xlsx(Agrp.Fst.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/Agrp/Agrp_Fst_F_v_M.xlsx')
 
 #Pomc
 
@@ -100,7 +110,9 @@ Pomc.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Pomc.F.Fd.v.Fst$gene <- Pomc.F.Fd.v.Fst |> row.names()
 ensembl = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
@@ -110,6 +122,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Pomc.F.Fd.v.Fst <- left_join(Pomc.F.Fd.v.Fst, temp01, by = "gene")
 
+write.xlsx(Pomc.F.Fd.v.Fst, file = '../paper_figures/post_2025-04-07/DE_genes/Pomc/Pomc_F_Fd_v_Fst.xlsx')
 
 
 Pomc.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr, 
@@ -119,7 +132,9 @@ Pomc.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Pomc.M.Fd.v.Fst$gene <- Pomc.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -128,6 +143,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Pomc.M.Fd.v.Fst <- left_join(Pomc.M.Fd.v.Fst, temp01, by = "gene")
 
+write.xlsx(Pomc.M.Fd.v.Fst, file = '../paper_figures/post_2025-04-07/DE_genes/Pomc/Pomc_M_Fd_v_Fst.xlsx')
 
 
 Pomc.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
@@ -137,7 +153,9 @@ Pomc.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Pomc.Fd.F.v.M$gene <- Pomc.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -146,6 +164,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Pomc.Fd.F.v.M <- left_join(Pomc.Fd.F.v.M, temp01, by = "gene")
 
+write.xlsx(Pomc.Fd.F.v.M, file = '../paper_figures/post_2025-04-07/DE_genes/Pomc/Pomc_Fd_F_v_M.xlsx')
 
 
 Pomc.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
@@ -155,7 +174,9 @@ Pomc.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Pomc.Fst.F.v.M$gene <- Pomc.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -164,6 +185,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Pomc.Fst.F.v.M <- left_join(Pomc.Fst.F.v.M, temp01, by = "gene")
 
+write.xlsx(Pomc.Fst.F.v.M, file = '../paper_figures/post_2025-04-07/DE_genes/Pomc/Pomc_Fst_F_v_M.xlsx')
 
 
 #KNDy
@@ -176,7 +198,9 @@ KNDy.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 KNDy.F.Fd.v.Fst$gene <- KNDy.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -185,7 +209,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 KNDy.F.Fd.v.Fst <- left_join(KNDy.F.Fd.v.Fst, temp01, by = "gene")
 
-
+write.xlsx(KNDy.F.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/KNDy/KNDy_F_Fd_v_Fst.xlsx')
 
 KNDy.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr, 
                                subset.ident = 'KNDy', 
@@ -194,7 +218,9 @@ KNDy.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 KNDy.M.Fd.v.Fst$gene <- KNDy.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -204,6 +230,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 KNDy.M.Fd.v.Fst <- left_join(KNDy.M.Fd.v.Fst, temp01, by = "gene")
 
 
+write.xlsx(KNDy.M.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/KNDy/KNDy_M_Fd_v_Fst.xlsx')
 
 KNDy.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                              subset.ident = 'KNDy', 
@@ -212,7 +239,9 @@ KNDy.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 KNDy.Fd.F.v.M$gene <- KNDy.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -222,6 +251,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 KNDy.Fd.F.v.M <- left_join(KNDy.Fd.F.v.M, temp01, by = "gene")
 
 
+write.xlsx(KNDy.Fd.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/KNDy/KNDy_Fd_F_v_M.xlsx')
 
 KNDy.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                               subset.ident = 'KNDy', 
@@ -230,7 +260,9 @@ KNDy.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 KNDy.Fst.F.v.M$gene <- KNDy.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -239,6 +271,8 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 KNDy.Fst.F.v.M <- left_join(KNDy.Fst.F.v.M, temp01, by = "gene")
 
+
+write.xlsx(KNDy.Fst.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/KNDy/KNDy_Fst_F_v_M.xlsx')
 
 #DA
 
@@ -249,7 +283,9 @@ DA.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 DA.F.Fd.v.Fst$gene <- DA.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -258,7 +294,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 DA.F.Fd.v.Fst <- left_join(DA.F.Fd.v.Fst, temp01, by = "gene")
 
-
+write.xlsx(DA.F.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/DA/DA_F_Fd_v_Fst.xlsx')
 
 DA.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr, 
                                subset.ident = 'DA', 
@@ -267,7 +303,9 @@ DA.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 DA.M.Fd.v.Fst$gene <- DA.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -277,6 +315,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 DA.M.Fd.v.Fst <- left_join(DA.M.Fd.v.Fst, temp01, by = "gene")
 
 
+write.xlsx(DA.M.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/DA/DA_M_Fd_v_Fst.xlsx')
 
 DA.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                              subset.ident = 'DA', 
@@ -285,7 +324,9 @@ DA.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                           test.use = 'MAST',
+                           latent.vars = 'Sample_ID')
 
 DA.Fd.F.v.M$gene <- DA.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -295,6 +336,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 DA.Fd.F.v.M <- left_join(DA.Fd.F.v.M, temp01, by = "gene")
 
 
+write.xlsx(DA.Fd.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/DA/DA_Fd_F_v_M.xlsx')
 
 DA.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                               subset.ident = 'DA', 
@@ -303,7 +345,9 @@ DA.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                            test.use = 'MAST',
+                            latent.vars = 'Sample_ID')
 
 DA.Fst.F.v.M$gene <- DA.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -313,6 +357,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 DA.Fst.F.v.M <- left_join(DA.Fst.F.v.M, temp01, by = "gene")
 
 
+write.xlsx(DA.Fst.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/DA/DA_Fst_F_v_M.xlsx')
 
 #Ghrh/Chat
 
@@ -325,7 +370,9 @@ Ghrh.Chat.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'F_Fast', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Ghrh.Chat.F.Fd.v.Fst$gene <- Ghrh.Chat.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -335,6 +382,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Ghrh.Chat.F.Fd.v.Fst <- left_join(Ghrh.Chat.F.Fd.v.Fst, temp01, by = "gene")
 
 
+write.xlsx(Ghrh.Chat.F.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/Ghrh/Ghrh_F_Fd_v_Fst.xlsx')
 
 Ghrh.Chat.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr, 
                              subset.ident = 'Ghrh/Chat', 
@@ -343,7 +391,9 @@ Ghrh.Chat.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fast', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Ghrh.Chat.M.Fd.v.Fst$gene <- Ghrh.Chat.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -353,6 +403,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Ghrh.Chat.M.Fd.v.Fst <- left_join(Ghrh.Chat.M.Fd.v.Fst, temp01, by = "gene")
 
 
+write.xlsx(Ghrh.Chat.M.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/Ghrh/Ghrh_M_Fd_v_Fst.xlsx')
 
 Ghrh.Chat.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                            subset.ident = 'Ghrh/Chat', 
@@ -361,7 +412,9 @@ Ghrh.Chat.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                            ident.2 = 'M_Fed', 
                            logfc.threshold = log2(1.25), 
                            min.pct = 0.25, 
-                           pseudocount.use = 0)
+                           #pseudocount.use = 0,
+                           test.use = 'MAST',
+                           latent.vars = 'Sample_ID')
 
 Ghrh.Chat.Fd.F.v.M$gene <- Ghrh.Chat.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -371,6 +424,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Ghrh.Chat.Fd.F.v.M <- left_join(Ghrh.Chat.Fd.F.v.M, temp01, by = "gene")
 
 
+write.xlsx(Ghrh.Chat.Fd.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/Ghrh/Ghrh_Fd_F_v_M.xlsx')
 
 Ghrh.Chat.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                             subset.ident = 'Ghrh/Chat', 
@@ -379,7 +433,9 @@ Ghrh.Chat.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                             ident.2 = 'M_Fast', 
                             logfc.threshold = log2(1.25), 
                             min.pct = 0.25, 
-                            pseudocount.use = 0)
+                            #pseudocount.use = 0,
+                            test.use = 'MAST',
+                            latent.vars = 'Sample_ID')
 
 Ghrh.Chat.Fst.F.v.M$gene <- Ghrh.Chat.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -389,6 +445,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Ghrh.Chat.Fst.F.v.M <- left_join(Ghrh.Chat.Fst.F.v.M, temp01, by = "gene")
 
 
+write.xlsx(Ghrh.Chat.Fst.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/Ghrh/Ghrh_Fst_F_v_M.xlsx')
 
 
 #Sst/Unc13c
@@ -400,7 +457,9 @@ Sst.Unc13c.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'F_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                                    test.use = 'MAST',
+                                    latent.vars = 'Sample_ID')
 
 Sst.Unc13c.F.Fd.v.Fst$gene <- Sst.Unc13c.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -418,7 +477,9 @@ Sst.Unc13c.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'M_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                                    test.use = 'MAST',
+                                    latent.vars = 'Sample_ID')
 
 Sst.Unc13c.M.Fd.v.Fst$gene <- Sst.Unc13c.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -436,7 +497,9 @@ Sst.Unc13c.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                   ident.2 = 'M_Fed', 
                                   logfc.threshold = log2(1.25), 
                                   min.pct = 0.25, 
-                                  pseudocount.use = 0)
+                                  #pseudocount.use = 0,
+                                  test.use = 'MAST',
+                                  latent.vars = 'Sample_ID')
 
 Sst.Unc13c.Fd.F.v.M$gene <- Sst.Unc13c.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -454,7 +517,9 @@ Sst.Unc13c.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fast', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                                   test.use = 'MAST',
+                                   latent.vars = 'Sample_ID')
 
 Sst.Unc13c.Fst.F.v.M$gene <- Sst.Unc13c.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -474,7 +539,9 @@ Lamp5.Npy5r.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'F_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                                    test.use = 'MAST',
+                                    latent.vars = 'Sample_ID')
 
 Lamp5.Npy5r.F.Fd.v.Fst$gene <- Lamp5.Npy5r.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -492,7 +559,9 @@ Lamp5.Npy5r.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'M_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                                    test.use = 'MAST',
+                                    latent.vars = 'Sample_ID')
 
 Lamp5.Npy5r.M.Fd.v.Fst$gene <- Lamp5.Npy5r.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -510,7 +579,9 @@ Lamp5.Npy5r.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                   ident.2 = 'M_Fed', 
                                   logfc.threshold = log2(1.25), 
                                   min.pct = 0.25, 
-                                  pseudocount.use = 0)
+                                  #pseudocount.use = 0,
+                                  test.use = 'MAST',
+                                  latent.vars = 'Sample_ID')
 
 Lamp5.Npy5r.Fd.F.v.M$gene <- Lamp5.Npy5r.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -528,7 +599,9 @@ Lamp5.Npy5r.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fast', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                                   test.use = 'MAST',
+                                   latent.vars = 'Sample_ID')
 
 Lamp5.Npy5r.Fst.F.v.M$gene <- Lamp5.Npy5r.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -547,7 +620,9 @@ Lef1.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'F_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Lef1.F.Fd.v.Fst$gene <- Lef1.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -565,7 +640,9 @@ Lef1.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'M_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Lef1.M.Fd.v.Fst$gene <- Lef1.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -583,7 +660,9 @@ Lef1.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                   ident.2 = 'M_Fed', 
                                   logfc.threshold = log2(1.25), 
                                   min.pct = 0.25, 
-                                  pseudocount.use = 0)
+                                  #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Lef1.Fd.F.v.M$gene <- Lef1.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -601,7 +680,9 @@ Lef1.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fast', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Lef1.Fst.F.v.M$gene <- Lef1.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -621,7 +702,9 @@ Htr3b.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Htr3b.F.Fd.v.Fst$gene <- Htr3b.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -639,7 +722,9 @@ Htr3b.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Htr3b.M.Fd.v.Fst$gene <- Htr3b.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -657,7 +742,9 @@ Htr3b.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Htr3b.Fd.F.v.M$gene <- Htr3b.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -675,7 +762,9 @@ Htr3b.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Htr3b.Fst.F.v.M$gene <- Htr3b.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -694,7 +783,9 @@ Gad2.Htr2c.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Gad2.Htr2c.F.Fd.v.Fst$gene <- Gad2.Htr2c.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -712,7 +803,9 @@ Gad2.Htr2c.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Gad2.Htr2c.M.Fd.v.Fst$gene <- Gad2.Htr2c.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -730,7 +823,9 @@ Gad2.Htr2c.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Gad2.Htr2c.Fd.F.v.M$gene <- Gad2.Htr2c.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -748,7 +843,9 @@ Gad2.Htr2c.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Gad2.Htr2c.Fst.F.v.M$gene <- Gad2.Htr2c.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -768,7 +865,9 @@ Ros1.Alk.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Ros1.Alk.F.Fd.v.Fst$gene <- Ros1.Alk.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -786,7 +885,9 @@ Ros1.Alk.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Ros1.Alk.M.Fd.v.Fst$gene <- Ros1.Alk.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -804,7 +905,9 @@ Ros1.Alk.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Ros1.Alk.Fd.F.v.M$gene <- Ros1.Alk.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -822,7 +925,9 @@ Ros1.Alk.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Ros1.Alk.Fst.F.v.M$gene <- Ros1.Alk.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -843,7 +948,9 @@ Satb2.Slc18a2.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Satb2.Slc18a2.F.Fd.v.Fst$gene <- Satb2.Slc18a2.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -861,7 +968,9 @@ Satb2.Slc18a2.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Satb2.Slc18a2.M.Fd.v.Fst$gene <- Satb2.Slc18a2.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -879,7 +988,9 @@ Satb2.Slc18a2.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Satb2.Slc18a2.Fd.F.v.M$gene <- Satb2.Slc18a2.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -897,7 +1008,9 @@ Satb2.Slc18a2.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Satb2.Slc18a2.Fst.F.v.M$gene <- Satb2.Slc18a2.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -916,7 +1029,9 @@ Coch.Slc18a2.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Coch.Slc18a2.F.Fd.v.Fst$gene <- Coch.Slc18a2.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -934,7 +1049,9 @@ Coch.Slc18a2.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Coch.Slc18a2.M.Fd.v.Fst$gene <- Coch.Slc18a2.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -952,7 +1069,9 @@ Coch.Slc18a2.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Coch.Slc18a2.Fd.F.v.M$gene <- Coch.Slc18a2.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -970,7 +1089,9 @@ Coch.Slc18a2.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Coch.Slc18a2.Fst.F.v.M$gene <- Coch.Slc18a2.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -990,7 +1111,9 @@ Tbx19.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Tbx19.F.Fd.v.Fst$gene <- Tbx19.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1008,7 +1131,9 @@ Tbx19.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Tbx19.M.Fd.v.Fst$gene <- Tbx19.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1026,7 +1151,9 @@ Tbx19.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Tbx19.Fd.F.v.M$gene <- Tbx19.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1044,7 +1171,9 @@ Tbx19.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Tbx19.Fst.F.v.M$gene <- Tbx19.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1064,7 +1193,9 @@ Tbx15.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Tbx15.F.Fd.v.Fst$gene <- Tbx15.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1082,7 +1213,9 @@ Tbx15.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Tbx15.M.Fd.v.Fst$gene <- Tbx15.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1100,7 +1233,9 @@ Tbx15.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Tbx15.Fd.F.v.M$gene <- Tbx15.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1118,7 +1253,9 @@ Tbx15.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Tbx15.Fst.F.v.M$gene <- Tbx15.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1137,7 +1274,9 @@ Ebf3.Htr2c.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Ebf3.Htr2c.F.Fd.v.Fst$gene <- Ebf3.Htr2c.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1155,7 +1294,9 @@ Ebf3.Htr2c.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Ebf3.Htr2c.M.Fd.v.Fst$gene <- Ebf3.Htr2c.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1173,7 +1314,9 @@ Ebf3.Htr2c.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Ebf3.Htr2c.Fd.F.v.M$gene <- Ebf3.Htr2c.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1191,7 +1334,9 @@ Ebf3.Htr2c.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Ebf3.Htr2c.Fst.F.v.M$gene <- Ebf3.Htr2c.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1212,7 +1357,9 @@ Slc17a6.Alk.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Slc17a6.Alk.F.Fd.v.Fst$gene <- Slc17a6.Alk.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1230,7 +1377,9 @@ Slc17a6.Alk.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Slc17a6.Alk.M.Fd.v.Fst$gene <- Slc17a6.Alk.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1248,7 +1397,9 @@ Slc17a6.Alk.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Slc17a6.Alk.Fd.F.v.M$gene <- Slc17a6.Alk.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1266,7 +1417,9 @@ Slc17a6.Alk.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Slc17a6.Alk.Fst.F.v.M$gene <- Slc17a6.Alk.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1287,7 +1440,9 @@ Erg.Lepr.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Erg.Lepr.F.Fd.v.Fst$gene <- Erg.Lepr.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1305,7 +1460,9 @@ Erg.Lepr.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Erg.Lepr.M.Fd.v.Fst$gene <- Erg.Lepr.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1323,7 +1480,9 @@ Erg.Lepr.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Erg.Lepr.Fd.F.v.M$gene <- Erg.Lepr.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1341,7 +1500,9 @@ Erg.Lepr.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Erg.Lepr.Fst.F.v.M$gene <- Erg.Lepr.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1360,7 +1521,9 @@ Tac1.Reln.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Tac1.Reln.F.Fd.v.Fst$gene <- Tac1.Reln.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1378,7 +1541,9 @@ Tac1.Reln.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Tac1.Reln.M.Fd.v.Fst$gene <- Tac1.Reln.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1396,7 +1561,9 @@ Tac1.Reln.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Tac1.Reln.Fd.F.v.M$gene <- Tac1.Reln.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1414,7 +1581,9 @@ Tac1.Reln.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Tac1.Reln.Fst.F.v.M$gene <- Tac1.Reln.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1435,7 +1604,9 @@ Klhl1.Ebf3.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Klhl1.Ebf3.F.Fd.v.Fst$gene <- Klhl1.Ebf3.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1453,7 +1624,9 @@ Klhl1.Ebf3.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Klhl1.Ebf3.M.Fd.v.Fst$gene <- Klhl1.Ebf3.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1471,7 +1644,9 @@ Klhl1.Ebf3.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Klhl1.Ebf3.Fd.F.v.M$gene <- Klhl1.Ebf3.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1489,7 +1664,9 @@ Klhl1.Ebf3.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Klhl1.Ebf3.Fst.F.v.M$gene <- Klhl1.Ebf3.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1511,7 +1688,9 @@ SCN.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 SCN.F.Fd.v.Fst$gene <- SCN.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1529,7 +1708,9 @@ SCN.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 SCN.M.Fd.v.Fst$gene <- SCN.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1547,7 +1728,9 @@ SCN.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                            test.use = 'MAST',
+                            latent.vars = 'Sample_ID')
 
 SCN.Fd.F.v.M$gene <- SCN.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1565,7 +1748,9 @@ SCN.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 SCN.Fst.F.v.M$gene <- SCN.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1585,7 +1770,9 @@ VMH.01.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 VMH.01.F.Fd.v.Fst$gene <- VMH.01.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1603,7 +1790,9 @@ VMH.01.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 VMH.01.M.Fd.v.Fst$gene <- VMH.01.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1639,7 +1828,9 @@ VMH.01.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 VMH.01.Fst.F.v.M$gene <- VMH.01.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1660,7 +1851,9 @@ VMH.02.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 VMH.02.F.Fd.v.Fst$gene <- VMH.02.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1696,7 +1889,9 @@ VMH.02.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 VMH.02.Fd.F.v.M$gene <- VMH.02.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1714,7 +1909,9 @@ VMH.02.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 VMH.02.Fst.F.v.M$gene <- VMH.02.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1733,7 +1930,9 @@ PVp.01.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 PVp.01.F.Fd.v.Fst$gene <- PVp.01.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1769,7 +1968,9 @@ PVp.01.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 PVp.01.Fd.F.v.M$gene <- PVp.01.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1787,7 +1988,9 @@ PVp.01.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 PVp.01.Fst.F.v.M$gene <- PVp.01.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1807,7 +2010,9 @@ PVp.02.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 PVp.02.F.Fd.v.Fst$gene <- PVp.02.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1825,7 +2030,9 @@ PVp.02.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 PVp.02.M.Fd.v.Fst$gene <- PVp.02.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1843,7 +2050,9 @@ PVp.02.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 PVp.02.Fd.F.v.M$gene <- PVp.02.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1861,7 +2070,9 @@ PVp.02.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 PVp.02.Fst.F.v.M$gene <- PVp.02.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1880,7 +2091,9 @@ PVp.03.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 PVp.03.F.Fd.v.Fst$gene <- PVp.03.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1898,7 +2111,9 @@ PVp.03.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 PVp.03.M.Fd.v.Fst$gene <- PVp.03.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1916,7 +2131,9 @@ PVp.03.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 PVp.03.Fd.F.v.M$gene <- PVp.03.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1934,7 +2151,9 @@ PVp.03.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 PVp.03.Fst.F.v.M$gene <- PVp.03.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1955,7 +2174,9 @@ PVp.04.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 PVp.04.F.Fd.v.Fst$gene <- PVp.04.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1973,7 +2194,9 @@ PVp.04.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 PVp.04.M.Fd.v.Fst$gene <- PVp.04.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -1991,7 +2214,9 @@ PVp.04.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 PVp.04.Fd.F.v.M$gene <- PVp.04.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2009,7 +2234,9 @@ PVp.04.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 PVp.04.Fst.F.v.M$gene <- PVp.04.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2029,7 +2256,9 @@ MM.01.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 MM.01.F.Fd.v.Fst$gene <- MM.01.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2047,7 +2276,9 @@ MM.01.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 MM.01.M.Fd.v.Fst$gene <- MM.01.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2065,7 +2296,9 @@ MM.01.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 MM.01.Fd.F.v.M$gene <- MM.01.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2083,7 +2316,9 @@ MM.01.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 MM.01.Fst.F.v.M$gene <- MM.01.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2104,7 +2339,9 @@ MM.02.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 MM.02.F.Fd.v.Fst$gene <- MM.02.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2122,7 +2359,9 @@ MM.02.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 MM.02.M.Fd.v.Fst$gene <- MM.02.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2140,7 +2379,9 @@ MM.02.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 MM.02.Fd.F.v.M$gene <- MM.02.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2158,7 +2399,9 @@ MM.02.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 MM.02.Fst.F.v.M$gene <- MM.02.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2179,7 +2422,9 @@ MM.03.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 MM.03.F.Fd.v.Fst$gene <- MM.03.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2197,7 +2442,9 @@ MM.03.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 MM.03.M.Fd.v.Fst$gene <- MM.03.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2215,7 +2462,9 @@ MM.03.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 MM.03.Fd.F.v.M$gene <- MM.03.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2233,7 +2482,9 @@ MM.03.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 MM.03.Fst.F.v.M$gene <- MM.03.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2252,7 +2503,9 @@ Tu.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Tu.F.Fd.v.Fst$gene <- Tu.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2270,7 +2523,9 @@ Tu.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Tu.M.Fd.v.Fst$gene <- Tu.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2288,7 +2543,9 @@ Tu.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                           test.use = 'MAST',
+                           latent.vars = 'Sample_ID')
 
 Tu.Fd.F.v.M$gene <- Tu.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2306,7 +2563,9 @@ Tu.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                            test.use = 'MAST',
+                            latent.vars = 'Sample_ID')
 
 Tu.Fst.F.v.M$gene <- Tu.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2326,7 +2585,9 @@ ParsTub.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 ParsTub.F.Fd.v.Fst$gene <- ParsTub.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2344,7 +2605,9 @@ ParsTub.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 ParsTub.M.Fd.v.Fst$gene <- ParsTub.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2362,7 +2625,9 @@ ParsTub.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 ParsTub.Fd.F.v.M$gene <- ParsTub.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2380,7 +2645,9 @@ ParsTub.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 ParsTub.Fst.F.v.M$gene <- ParsTub.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2400,7 +2667,9 @@ Astrocytes.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Astrocytes.F.Fd.v.Fst$gene <- Astrocytes.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2418,7 +2687,9 @@ Astrocytes.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Astrocytes.M.Fd.v.Fst$gene <- Astrocytes.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2436,7 +2707,9 @@ Astrocytes.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 Astrocytes.Fd.F.v.M$gene <- Astrocytes.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2454,7 +2727,9 @@ Astrocytes.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Astrocytes.Fst.F.v.M$gene <- Astrocytes.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2474,7 +2749,9 @@ Astrocytes.Fst.F.v.M <- left_join(Astrocytes.Fst.F.v.M, temp01, by = "gene")
                                ident.2 = 'F_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 α.Tanycytes.F.Fd.v.Fst$gene <- α.Tanycytes.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2492,7 +2769,9 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
                                ident.2 = 'M_Fast', 
                                logfc.threshold = log2(1.25), 
                                min.pct = 0.25, 
-                               pseudocount.use = 0)
+                               #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 α.Tanycytes.M.Fd.v.Fst$gene <- α.Tanycytes.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2510,7 +2789,9 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
                              ident.2 = 'M_Fed', 
                              logfc.threshold = log2(1.25), 
                              min.pct = 0.25, 
-                             pseudocount.use = 0)
+                             #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 α.Tanycytes.Fd.F.v.M$gene <- α.Tanycytes.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2528,7 +2809,9 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
                               ident.2 = 'M_Fast', 
                               logfc.threshold = log2(1.25), 
                               min.pct = 0.25, 
-                              pseudocount.use = 0)
+                              #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 α.Tanycytes.Fst.F.v.M$gene <- α.Tanycytes.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2549,7 +2832,9 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
                                       ident.2 = 'F_Fast', 
                                       logfc.threshold = log2(1.25), 
                                       min.pct = 0.25, 
-                                      pseudocount.use = 0)
+                                      #pseudocount.use = 0,
+                                      test.use = 'MAST',
+                                      latent.vars = 'Sample_ID')
 
 β.Tanycytes.F.Fd.v.Fst$gene <- β.Tanycytes.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2567,7 +2852,9 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
                                       ident.2 = 'M_Fast', 
                                       logfc.threshold = log2(1.25), 
                                       min.pct = 0.25, 
-                                      pseudocount.use = 0)
+                                      #pseudocount.use = 0,
+                                      test.use = 'MAST',
+                                      latent.vars = 'Sample_ID')
 
 β.Tanycytes.M.Fd.v.Fst$gene <- β.Tanycytes.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2585,7 +2872,9 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
                                     ident.2 = 'M_Fed', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                                    test.use = 'MAST',
+                                    latent.vars = 'Sample_ID')
 
 β.Tanycytes.Fd.F.v.M$gene <- β.Tanycytes.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2603,7 +2892,9 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
                                      ident.2 = 'M_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                                     test.use = 'MAST',
+                                     latent.vars = 'Sample_ID')
 
 β.Tanycytes.Fst.F.v.M$gene <- β.Tanycytes.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2624,7 +2915,9 @@ Ependymal.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'F_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                                    test.use = 'MAST',
+                                    latent.vars = 'Sample_ID')
 
 Ependymal.F.Fd.v.Fst$gene <- Ependymal.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2642,7 +2935,9 @@ Ependymal.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'M_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                                    test.use = 'MAST',
+                                    latent.vars = 'Sample_ID')
 
 Ependymal.M.Fd.v.Fst$gene <- Ependymal.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2660,7 +2955,9 @@ Ependymal.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fed', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                                  test.use = 'MAST',
+                                  latent.vars = 'Sample_ID')
 
 Ependymal.Fd.F.v.M$gene <- Ependymal.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2678,7 +2975,9 @@ Ependymal.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'M_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                                   test.use = 'MAST',
+                                   latent.vars = 'Sample_ID')
 
 Ependymal.Fst.F.v.M$gene <- Ependymal.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2698,7 +2997,9 @@ Oligo.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'F_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                                test.use = 'MAST',
+                                latent.vars = 'Sample_ID')
 
 Oligo.F.Fd.v.Fst$gene <- Oligo.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2707,7 +3008,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Oligo.F.Fd.v.Fst <- left_join(Oligo.F.Fd.v.Fst, temp01, by = "gene")
 
-
+write.xlsx(Oligo.F.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/Oligo/Oligo_F_Fd_v_Fst.xlsx')
 
 Oligo.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr, 
                                      subset.ident = 'Oligodendrocytes', 
@@ -2716,7 +3017,9 @@ Oligo.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'M_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                                test.use = 'MAST',
+                                latent.vars = 'Sample_ID')
 
 Oligo.M.Fd.v.Fst$gene <- Oligo.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2726,6 +3029,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Oligo.M.Fd.v.Fst <- left_join(Oligo.M.Fd.v.Fst, temp01, by = "gene")
 
 
+write.xlsx(Oligo.M.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/Oligo/Oligo_M_Fd_v_Fst.xlsx')
 
 Oligo.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                                    subset.ident = 'Oligodendrocytes', 
@@ -2734,7 +3038,9 @@ Oligo.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fed', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 Oligo.Fd.F.v.M$gene <- Oligo.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2744,6 +3050,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Oligo.Fd.F.v.M <- left_join(Oligo.Fd.F.v.M, temp01, by = "gene")
 
 
+write.xlsx(Oligo.Fd.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/Oligo/Oligo_Fd_F_v_M.xlsx')
 
 Oligo.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                                     subset.ident = 'Oligodendrocytes', 
@@ -2752,7 +3059,9 @@ Oligo.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'M_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 Oligo.Fst.F.v.M$gene <- Oligo.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2761,6 +3070,7 @@ temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','descripti
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Oligo.Fst.F.v.M <- left_join(Oligo.Fst.F.v.M, temp01, by = "gene")
 
+write.xlsx(Oligo.Fst.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/Oligo/Oligo_Fst_F_v_M.xlsx')
 
 #TOP
 
@@ -2772,12 +3082,15 @@ TOP.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'F_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 TOP.F.Fd.v.Fst$gene <- TOP.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
                 filters = "external_gene_name", values = row.names(TOP.F.Fd.v.Fst), mart = ensembl,
                 checkFilters = TRUE, verbose = TRUE, uniqueRows = TRUE, bmHeader = FALSE)
+
 temp01 <- temp01 |> rename('gene' = "external_gene_name")
 TOP.F.Fd.v.Fst <- left_join(TOP.F.Fd.v.Fst, temp01, by = "gene")
 
@@ -2790,7 +3103,9 @@ TOP.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'M_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 TOP.M.Fd.v.Fst$gene <- TOP.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2808,7 +3123,9 @@ TOP.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fed', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                            test.use = 'MAST',
+                            latent.vars = 'Sample_ID')
 
 TOP.Fd.F.v.M$gene <- TOP.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2826,7 +3143,9 @@ TOP.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'M_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 TOP.Fst.F.v.M$gene <- TOP.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2847,7 +3166,9 @@ OPC.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'F_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 OPC.F.Fd.v.Fst$gene <- OPC.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2865,7 +3186,9 @@ OPC.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'M_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 OPC.M.Fd.v.Fst$gene <- OPC.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2883,7 +3206,9 @@ OPC.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fed', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                            test.use = 'MAST',
+                            latent.vars = 'Sample_ID')
 
 OPC.Fd.F.v.M$gene <- OPC.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2901,7 +3226,9 @@ OPC.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'M_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 OPC.Fst.F.v.M$gene <- OPC.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2921,7 +3248,9 @@ Microglia.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'F_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                                    test.use = 'MAST',
+                                    latent.vars = 'Sample_ID')
 
 Microglia.F.Fd.v.Fst$gene <- Microglia.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2931,6 +3260,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Microglia.F.Fd.v.Fst <- left_join(Microglia.F.Fd.v.Fst, temp01, by = "gene")
 
 
+write.xlsx(Microglia.F.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/Microglia/Microglia_F_Fd_v_Fst.xlsx')
 
 Microglia.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr, 
                                      subset.ident = 'Microglia', 
@@ -2939,7 +3269,9 @@ Microglia.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'M_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                                    test.use = 'MAST',
+                                    latent.vars = 'Sample_ID')
 
 Microglia.M.Fd.v.Fst$gene <- Microglia.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2949,6 +3281,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Microglia.M.Fd.v.Fst <- left_join(Microglia.M.Fd.v.Fst, temp01, by = "gene")
 
 
+write.xlsx(Microglia.M.Fd.v.Fst, file = '../paper_figures/post_2025-01-06/DE_genes/Microglia/Microglia_M_Fd_v_Fst.xlsx')
 
 Microglia.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                                    subset.ident = 'Microglia', 
@@ -2957,7 +3290,9 @@ Microglia.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fed', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                                  test.use = 'MAST',
+                                  latent.vars = 'Sample_ID')
 
 Microglia.Fd.F.v.M$gene <- Microglia.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2967,6 +3302,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Microglia.Fd.F.v.M <- left_join(Microglia.Fd.F.v.M, temp01, by = "gene")
 
 
+write.xlsx(Microglia.Fd.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/Microglia/Microglia_Fd_F_v_M.xlsx')
 
 Microglia.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr, 
                                     subset.ident = 'Microglia', 
@@ -2975,7 +3311,9 @@ Microglia.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'M_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                                   test.use = 'MAST',
+                                   latent.vars = 'Sample_ID')
 
 Microglia.Fst.F.v.M$gene <- Microglia.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -2985,6 +3323,7 @@ temp01 <- temp01 |> rename('gene' = "external_gene_name")
 Microglia.Fst.F.v.M <- left_join(Microglia.Fst.F.v.M, temp01, by = "gene")
 
 
+write.xlsx(Microglia.Fst.F.v.M, file = '../paper_figures/post_2025-01-06/DE_genes/Microglia/Microglia_Fst_F_v_M.xlsx')
 
 #Endothelial 
 
@@ -2996,7 +3335,9 @@ Endothelial.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'F_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                                     test.use = 'MAST',
+                                     latent.vars = 'Sample_ID')
 
 Endothelial.F.Fd.v.Fst$gene <- Endothelial.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -3014,7 +3355,9 @@ Endothelial.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'M_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                                     test.use = 'MAST',
+                                     latent.vars = 'Sample_ID')
 
 Endothelial.M.Fd.v.Fst$gene <- Endothelial.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -3032,7 +3375,9 @@ Endothelial.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fed', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                                   test.use = 'MAST',
+                                   latent.vars = 'Sample_ID')
 
 Endothelial.Fd.F.v.M$gene <- Endothelial.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -3050,7 +3395,9 @@ Endothelial.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'M_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                                    test.use = 'MAST',
+                                    latent.vars = 'Sample_ID')
 
 Endothelial.Fst.F.v.M$gene <- Endothelial.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -3071,7 +3418,9 @@ VLMC.F.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'F_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 VLMC.F.Fd.v.Fst$gene <- VLMC.F.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -3089,7 +3438,9 @@ VLMC.M.Fd.v.Fst <- FindMarkers(ARH_Sex_by_Nutr,
                                      ident.2 = 'M_Fast', 
                                      logfc.threshold = log2(1.25), 
                                      min.pct = 0.25, 
-                                     pseudocount.use = 0)
+                                     #pseudocount.use = 0,
+                               test.use = 'MAST',
+                               latent.vars = 'Sample_ID')
 
 VLMC.M.Fd.v.Fst$gene <- VLMC.M.Fd.v.Fst |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -3107,7 +3458,9 @@ VLMC.Fd.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                    ident.2 = 'M_Fed', 
                                    logfc.threshold = log2(1.25), 
                                    min.pct = 0.25, 
-                                   pseudocount.use = 0)
+                                   #pseudocount.use = 0,
+                             test.use = 'MAST',
+                             latent.vars = 'Sample_ID')
 
 VLMC.Fd.F.v.M$gene <- VLMC.Fd.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -3125,7 +3478,9 @@ VLMC.Fst.F.v.M <- FindMarkers(ARH_Sex_by_Nutr,
                                     ident.2 = 'M_Fast', 
                                     logfc.threshold = log2(1.25), 
                                     min.pct = 0.25, 
-                                    pseudocount.use = 0)
+                                    #pseudocount.use = 0,
+                              test.use = 'MAST',
+                              latent.vars = 'Sample_ID')
 
 VLMC.Fst.F.v.M$gene <- VLMC.Fst.F.v.M |> row.names()
 temp01 <- getBM(attributes = c("external_gene_name",'chromosome_name','description') , 
@@ -5463,53 +5818,53 @@ row.number <- 0
 
 Sex_by_Nutr_DE_nums$DE <- Sex_by_Nutr_DE_nums$DE |> as.numeric()
 
-
+Sex_by_Nutr_DE_nums <- Sex_by_Nutr_DE_nums %>% group_by(cell_type) %>% mutate(total = sum(DE))
 
 
 Sex_by_Nutr_DE_nums |> filter(comparison == 'Nurt') |> 
   ggplot(aes(x = cell_type, y = DE)) + 
   geom_col(aes(fill = factor(condition, levels = c('Female','F.M.Ovlp','Male'))), color = 'black', size = 0.25) + 
-  scale_fill_manual(values = c('#F39C12','#D35400','#E67E22'), name = '') +
+  scale_fill_manual(values = c('#f8c471','#D35400','#E67E22'), name = '') +
   scale_x_discrete(limits = c('KNDy',
                               'Agrp',
                               'Lamp5/Npy5r',
-                              'Pomc',
-                              'Astrocytes',
                               'β-Tanycytes',
                               'Ghrh/Chat',
-                              'Oligodendrocytes',
-                              'Sst/Unc13c',
+                              'Astrocytes',
+                              'Pomc',
                               'MM.01',
+                              'Oligodendrocytes',
                               'α-Tanycytes',
-                              'VMH.01',
-                              'Gad2/Htr2c',
                               'DA',
-                              'Tbx19',
-                              'Htr3b',
+                              'VMH.01',
+                              'Sst/Unc13c',
+                              'Gad2/Htr2c',
+                              'Microglia',
                               'Coch/Slc18a2',
-                              'Slc17a6/Alk',
-                              'MM.02',
+                              'Htr3b',
+                              'Lef1',
+                              'Ependymal',
                               'PVp.01',
-                              'PVp.02',
+                              'Tbx19',
                               'Erg/Lepr',
                               'Pars Tuberalis',
-                              'Lef1',
+                              'Slc17a6/Alk',
+                              'PVp.02',
                               'OPC',
-                              'Ependymal',
-                              'Microglia',
+                              'VLMC',
                               'PVp.03',
-                              'SCN',
-                              'PVp.04',
+                              'MM.02',
                               'Satb2/Slc18a2',
                               'MM.03',
-                              'Endothelial',
-                              'VMH.02',
                               'Klhl1/Ebf3',
-                              'Ros1/Alk',
                               'Ebf3/Htr2c',
-                              'VLMC',
+                              'VMH.02',
+                              'Ros1/Alk',
+                              'PVp.04',
+                              'SCN',
                               'Tu',
                               'Tac1/Reln',
+                              'Endothelial',
                               'TOP',
                               'Tbx15'
   ),
@@ -5528,7 +5883,7 @@ Sex_by_Nutr_DE_nums |> filter(comparison == 'Nurt') |>
                      })
                    }) +
   labs(x = '', y= 'Nutritionally Regulated DE Genes', fill = '') +
-  coord_cartesian(ylim = c(50,1250)) +
+  coord_cartesian(ylim = c(0,325)) +
   theme_classic() +
   theme(text = element_text(family = "Arial", size = 6, color = 'black'),
         axis.text.x= element_text(family = 'Arial', color = 'black', size = 6,angle = 90, hjust = 1, vjust = 0.5),
@@ -5538,54 +5893,54 @@ Sex_by_Nutr_DE_nums |> filter(comparison == 'Nurt') |>
         legend.key.height = unit(.1, 'in'),
         legend.direction = 'horizontal',
         legend.position = c(0.5,0.75))
-ggsave(filename = 'figures/celltype_number_of_Nutr_DE.tiff', device = 'tiff', units = 'in', width = 7.24, height = 2.25, dpi = 600)
+ggsave(filename = 'figures/celltype_number_of_Nutr_DE3.tiff', device = 'tiff', units = 'in', width = 7.24, height = 2.25, dpi = 600)
 
 
 ######
 Sex_by_Nutr_DE_nums |> filter(comparison == 'Sex') |> 
   ggplot(aes(x = cell_type, y = DE)) + 
   geom_col(aes(fill = factor(condition, levels = c('Fed','Fd.Fst.Ovlp','Fasted'))), color = 'black', size = 0.25) + 
-  scale_fill_manual(values = c('#C39BD3','#8E44AD','#A569BD'), name = '') +
+  scale_fill_manual(values = c('#d7bde2','#8E44AD','#A569BD'), name = '') +
   scale_x_discrete(limits = c('KNDy',
                               'Agrp',
                               'Lamp5/Npy5r',
-                              'Pomc',
-                              'Astrocytes',
                               'β-Tanycytes',
                               'Ghrh/Chat',
-                              'Oligodendrocytes',
-                              'Sst/Unc13c',
+                              'Astrocytes',
+                              'Pomc',
                               'MM.01',
+                              'Oligodendrocytes',
                               'α-Tanycytes',
-                              'VMH.01',
-                              'Gad2/Htr2c',
                               'DA',
-                              'Tbx19',
-                              'Htr3b',
+                              'VMH.01',
+                              'Sst/Unc13c',
+                              'Gad2/Htr2c',
+                              'Microglia',
                               'Coch/Slc18a2',
-                              'Slc17a6/Alk',
-                              'MM.02',
+                              'Htr3b',
+                              'Lef1',
+                              'Ependymal',
                               'PVp.01',
-                              'PVp.02',
+                              'Tbx19',
                               'Erg/Lepr',
                               'Pars Tuberalis',
-                              'Lef1',
+                              'Slc17a6/Alk',
+                              'PVp.02',
                               'OPC',
-                              'Ependymal',
-                              'Microglia',
+                              'VLMC',
                               'PVp.03',
-                              'SCN',
-                              'PVp.04',
+                              'MM.02',
                               'Satb2/Slc18a2',
                               'MM.03',
-                              'Endothelial',
-                              'VMH.02',
                               'Klhl1/Ebf3',
-                              'Ros1/Alk',
                               'Ebf3/Htr2c',
-                              'VLMC',
+                              'VMH.02',
+                              'Ros1/Alk',
+                              'PVp.04',
+                              'SCN',
                               'Tu',
                               'Tac1/Reln',
+                              'Endothelial',
                               'TOP',
                               'Tbx15'),
                    labels = function(x) {
@@ -5605,7 +5960,7 @@ Sex_by_Nutr_DE_nums |> filter(comparison == 'Sex') |>
                    , position="top") +
   labs(x = '', y= 'Sexually Regulated DE Genes', fill = '') +
   scale_y_reverse() +
-  coord_cartesian(ylim = c(1250, 50)) +
+  coord_cartesian(ylim = c(325,0)) +
   theme_classic() +
   theme(text = element_text(family = "Arial", size = 6, color = 'black'),
         axis.text.x= element_text(family = 'Arial', color = 'black', size = 6,angle = 90, hjust = 1, vjust = 0.5),
@@ -5615,7 +5970,7 @@ Sex_by_Nutr_DE_nums |> filter(comparison == 'Sex') |>
         legend.key.height = unit(.1, 'in'),
         legend.direction = 'horizontal',
         legend.position = c(0.5,0.25))
-ggsave(filename = 'figures/celltype_number_of_Sex_DE.tiff', device = 'tiff', units = 'in', width = 7.24, height = 2.25, dpi = 600)
+ggsave(filename = 'figures/celltype_number_of_Sex_DE3.tiff', device = 'tiff', units = 'in', width = 7.24, height = 2.25, dpi = 600)
 
 
 
