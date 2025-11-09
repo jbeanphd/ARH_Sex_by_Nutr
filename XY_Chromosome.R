@@ -1,3 +1,14 @@
+# Read in required libraries
+libs <- c( 'gplots','stringi','reshape2','cowplot','RColorBrewer',
+           'sctransform','stringr','org.Mm.eg.db','AnnotationDbi',
+           'IRanges','S4Vectors','Biobase','BiocGenerics','clusterProfiler',
+           'biomaRt','Matrix','DESeq2','RcppThread', 'extrafont', 'openxlsx',
+           'Seurat','dplyr','tidyr','ggplot2','harmony','ggalluvial',
+           'scDblFinder','SoupX','UpSetR','ComplexUpset','CellChat','gprofiler2','NMF','ggalluvial')
+
+lapply(libs, require, character.only = TRUE)
+
+# create a dataframe that counts DE genes on X and Y chromosomes for each cell-type
 
 Sex_by_Nutr_DE_numsXY <- tibble(cell_type = 'a', comparison = 'a', condition = 'a', 
                                 DE = 0, XY = 0, Auto = 0, XY_Perc = 0, Auto_Perc = 0,
@@ -2376,7 +2387,7 @@ Sex_by_Nutr_DE_numsXY$Auto_Perc = Sex_by_Nutr_DE_numsXY$Auto / Sex_by_Nutr_DE_nu
 
 
 
-
+# custom graphic plotting the number of DE genes on X and Y chromosomes for each cell-type
 
 Sex_by_Nutr_DE_numsXY |> filter(comparison == 'Sex', condition == 'Total') |> 
   ggplot(aes(x = cell_type, y = XY)) + 

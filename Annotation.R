@@ -1,3 +1,6 @@
+# the purpose of this script is to annotate cell clusters
+
+# load required libraries
 libs <- c( 'gplots','stringi','reshape2','cowplot','RColorBrewer',
            'sctransform','stringr','org.Mm.eg.db','AnnotationDbi',
            'IRanges','S4Vectors','Biobase','BiocGenerics','clusterProfiler',
@@ -9,11 +12,13 @@ devtools::install_github('immunogenomics/presto')
 lapply(libs, require, character.only = TRUE)
 
 
-#create basic clustering for sample
+#create clustering
+# read in saved data
 ARH_Sex_by_Nutr <- readRDS('data/ARH_Sex_by_Nutr.rds')
-
+# normalize expression
 ARH_Sex_by_Nutr <- SCTransform(ARH_Sex_by_Nutr, verbose = TRUE, do.scale = FALSE, do.center = FALSE, assay = 'RNA')
 
+# list of genes of y chromosome and Xist Tsix
 yx_chrom_genes <- c('Eif2s3y','Sry','Zfy','Rps4y1','Amely','Tbl1y','Pcdh11y','Tgif2ly',
                     'Tspy1','Tspy2','Azfa','Usp9y','Ddx3y','Uty','Tb4y','Azfb',
                     'Cyorf15','Rps4y2','Eif1ay','Kdm5d','Xkry','Hsfy1','Hsfy2',
@@ -21,19 +26,25 @@ yx_chrom_genes <- c('Eif2s3y','Sry','Zfy','Rps4y1','Amely','Tbl1y','Pcdh11y','Tg
                     'Cdy1','Cdy2','Vcy1','Vcy2','Xist','Tsix'
 )
 
+# make a list of mitochondria genes
 mito.genes <- grep(pattern = "^mt-", x = rownames(x = ARH_Sex_by_Nutr@assays$RNA@data), value = TRUE)
+# a list of hemoglobin genes
 hemoglobin_genes <- c('Hbq1a','Hbb-y','Hbb-bt','Hba-a2','Hba-a1')
+# make a list of ribosome binding protein genes
 ribo.genes <- grep(pattern = '^Rp[sl]', x = rownames(x = ARH_Sex_by_Nutr@assays$RNA@data), value = TRUE)
 
-
+# exclude variable features that are xy mt rbp or hemoglobin genes
 ARH_Sex_by_Nutr@assays$SCT@var.features <- ARH_Sex_by_Nutr@assays$SCT@var.features[(!ARH_Sex_by_Nutr@assays$SCT@var.features %in% c(yx_chrom_genes,mito.genes,hemoglobin_genes,ribo.genes))]
 
+# calculate PCs based on variable features, calculate TSNE based on first 30 PCs
 ARH_Sex_by_Nutr <- RunPCA(ARH_Sex_by_Nutr, features = VariableFeatures(object = ARH_Sex_by_Nutr))
 ARH_Sex_by_Nutr <- RunTSNE(ARH_Sex_by_Nutr, reduction = "pca", dims = 1:30)
 
+# find neighbors based on first 30 PCs, find clusters at 1.5 resolution
 ARH_Sex_by_Nutr <- FindNeighbors(ARH_Sex_by_Nutr, dims = 1:30)
 ARH_Sex_by_Nutr <- FindClusters(ARH_Sex_by_Nutr, resolution = 1.5)
 
+# plot TSNE
 DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 8, repel = FALSE, reduction = 'tsne') + 
   NoLegend() +
   theme(axis.title.x=element_blank(),
@@ -46,6 +57,7 @@ DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 8, repel = FALSE, reduction 
 #ggsave('post_2023-05-02_figures/dimplot_by_number.tiff', device = 'tiff', units = 'in', width = 9, height = 9, dpi = 600)
 #ggsave('post_2023-05-02_figures/dimplot_by_number.svg', device = 'svg', width = 9, height = 9)
 
+# plot TSNE split by batch
 DimPlot(ARH_Sex_by_Nutr, label = FALSE, split.by = 'Batch', reduction = 'tsne') & 
   NoLegend() &
   theme(strip.text.x = element_text(hjust = 0.5,family = "Arial", face = 'plain', size = 10, color = 'black'),
@@ -61,7 +73,7 @@ DimPlot(ARH_Sex_by_Nutr, label = FALSE, split.by = 'Batch', reduction = 'tsne') 
 
 
 
-
+# plot TSNE grouped by batch
 
 DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2,pt.size = 0.01 , 
         shuffle = TRUE, group.by = 'Batch') + 
@@ -76,7 +88,7 @@ DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2,pt.size = 0.01 ,
         axis.line = element_blank())
 #ggsave('all_samples_figures/dimplot_group_by_batch', device = 'tiff', units = 'in', width = 3, height = 3, dpi = 600)
 
-
+#plot TSNE split by sex
 DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2, split.by = 'Sex') + 
   NoLegend() +
   theme(axis.title.x=element_blank(),
@@ -88,7 +100,7 @@ DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2, split.by = 'Sex') +
         axis.line = element_blank())
 #ggsave('all_samples_figures/dimplot_split_by_sex', device = 'tiff', units = 'in', width = 5, height = 3, dpi = 600)
 
-
+# plot TSNE grouped by sex
 DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2,pt.size = 0.01, repel = TRUE, 
         shuffle = TRUE, group.by = 'Sex') + 
   NoLegend() +
@@ -102,7 +114,7 @@ DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2,pt.size = 0.01, repel = TR
         axis.line = element_blank())
 #ggsave('all_samples_figures/dimplot_group_by_sex', device = 'tiff', units = 'in', width = 3, height = 3, dpi = 600)
 
-
+# plot TSNE split by nutritional state
 DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2, split.by = 'Nutr_State') + 
   NoLegend() +
   theme(axis.title.x=element_blank(),
@@ -114,7 +126,7 @@ DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2, split.by = 'Nutr_State') 
         axis.line = element_blank())
 #ggsave('all_samples_figures/dimplot_split_by_nutr', device = 'tiff', units = 'in', width = 5, height = 3, dpi = 600)
 
-
+# plot TSNE grouped by nutritional state
 DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2,pt.size = 0.01, repel = TRUE, 
         shuffle = TRUE, group.by = 'Nutr_State') + 
   NoLegend() +
@@ -128,7 +140,7 @@ DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2,pt.size = 0.01, repel = TR
         axis.line = element_blank())
 #ggsave('all_samples_figures/dimplot_group_by_nutr', device = 'tiff', units = 'in', width = 3, height = 3, dpi = 600)
 
-
+# plot TSNE split by sex and nutritional state
 DimPlot(ARH_Sex_by_Nutr,split.by = 'sexXnutr', ncol = 2) + 
   NoLegend() +
   theme(strip.text.x = element_text(hjust = 0.5,family = "Arial", face = 'plain', size = 12, color = 'black'),
@@ -146,7 +158,7 @@ DimPlot(ARH_Sex_by_Nutr,split.by = 'sexXnutr', ncol = 2) +
 
 
 
-
+# plot TSNE grouped by sex and nutritional state
 
 DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2,pt.size = 0.01, repel = TRUE, 
         shuffle = TRUE, group.by = 'sexXnutr') + 
@@ -162,105 +174,114 @@ DimPlot(ARH_Sex_by_Nutr, label = TRUE, label.size = 2,pt.size = 0.01, repel = TR
 #ggsave('all_samples_figures/dimplot_group_by_sexXnutr', device = 'tiff', units = 'in', width = 4, height = 3, dpi = 600)
 
 
-
+# plot expression of canonical ARH neuron genes
 FeaturePlot(ARH_Sex_by_Nutr, features = c('Agrp','Pomc','Tac2','Ghrh'), reduction = 'tsne')
 #ggsave('all_samples_figures/featureplot_arh_neurons', device = 'tiff', units = 'in', width = 7, height = 7, dpi = 600)
 
+# plot expression of neuron and glia marker genes
 FeaturePlot(ARH_Sex_by_Nutr, features = c('Snap25','Slc1a3','Ptprc','Mbp'))
 #ggsave('all_samples_figures/featureplot_arh_cells', device = 'tiff', units = 'in', width = 7, height = 7, dpi = 600)
 
-
+# plot expression of neuron specific genes
 FeaturePlot(ARH_Sex_by_Nutr, features = c('Slc17a6','Gad2','Th','Hdc'))
 #ggsave('all_samples_figures/featureplot_neurotransmitters', device = 'tiff', units = 'in', width = 7, height = 7, dpi = 600)
 
-all_sample_markers <- FindAllMarkers(ARH_Sex_by_Nutr, only.pos = TRUE, min.pct = 0.25, logfc.threshold = log2(1.25), pseudocount.use = 0)
+# find all marker genes, min pct 0.25, logfc threshold log2(1.25)
+all_sample_markers <- FindAllMarkers(ARH_Sex_by_Nutr, only.pos = TRUE, min.pct = 0.25, logfc.threshold = log2(1.25))
 
 
 #saveRDS(ARH_Sex_by_Nutr, file = 'data/ARH_Sex_by_Nutr.rds')
 ####2024-04-28####
 
 ######Cell Types######
-
+# list of neuron specific genes
 neuro.genes <- c('Snap25','Rbfox3','Syp','Dlg4','Slc17a6','Gad1','Gad2','Slc32a1','Th','Slc6a3','Slc18a2','Hdc','Chat','Chga')
 
+# calculate and save the   pct of neuron specific gene expression
 neuroPercent <- Matrix::colSums(ARH_Sex_by_Nutr@assays$RNA@counts[c(neuro.genes), ])/
   Matrix::colSums(ARH_Sex_by_Nutr@assays$RNA@counts)*100
 
-
 ARH_Sex_by_Nutr$neuroPercent <- neuroPercent
 
+# plot neuron genes expression pct
 FeaturePlot(ARH_Sex_by_Nutr, features ='neuroPercent', cols = c('lightgrey','red','purple'), max.cutoff = 0.3)
 DimPlot(ARH_Sex_by_Nutr, label = TRUE) + NoLegend()
 
-
+# list of astrocyte specific genes
 astro.genes <- c('Gfap','S100b','Aldh1l1','Aldoc','Slc1a2','Slc1a3')
-
+#  calculate and save astrocyte  genes expresssion pct
 astroPercent <- Matrix::colSums(ARH_Sex_by_Nutr@assays$RNA@counts[c(astro.genes), ])/
   Matrix::colSums(ARH_Sex_by_Nutr@assays$RNA@counts)*100
 
-
 ARH_Sex_by_Nutr$astroPercent <- astroPercent
 
-
+# list of oligodendrocyte specific genes
 oligo.genes <- c('Mbp','Mal','Olig1','Olig2','Mog','Cnp')
 
+# calculate and save oligo genes expresssion pct
 oligoPercent <- Matrix::colSums(ARH_Sex_by_Nutr@assays$RNA@counts[c(oligo.genes), ])/
   Matrix::colSums(ARH_Sex_by_Nutr@assays$RNA@counts)*100
-
 
 ARH_Sex_by_Nutr$oligoPercent <- oligoPercent
 
 
 
-
+# list of microglia specific genes
 micro.genes <- c('Cx3cr1','Tmem119','Aif1','Itgam','Cd68','Ptprc')
 
+# calculate and save microglia genes expression pct
 microPercent <- Matrix::colSums(ARH_Sex_by_Nutr@assays$RNA@counts[c(micro.genes), ])/
   Matrix::colSums(ARH_Sex_by_Nutr@assays$RNA@counts)*100
 
-
 ARH_Sex_by_Nutr$microPercent <- microPercent
 
-
+# list of ependemyal genes 
 epend.genes <- c('Foxj1','Meig1','Fam183b','Tmem107','Tppp3',"Pltp",'Mt3')
 
+# calculate and save ependemyal gene expression pct
 ependPercent <- Matrix::colSums(ARH_Sex_by_Nutr@assays$RNA@counts[c(epend.genes), ])/
   Matrix::colSums(ARH_Sex_by_Nutr@assays$RNA@counts)*100
 
-
 ARH_Sex_by_Nutr$ependPercent <- ependPercent
 
-
+# plot expression of cell-type specific gene expression
 FeaturePlot(ARH_Sex_by_Nutr, features =c('neuroPercent','astroPercent','oligoPercent','microPercent','ependPercent'), cols = c('lightgrey','red','purple'), max.cutoff = 0.2)
 #ggsave('all_samples_figures/cell_type_percent.tiff', device = 'tiff',units = 'in', width = 7, height = 7, dpi = 600)
 
 
 
 #Tanycytes
+# plot expression of tanycyte genes
 FeaturePlot(ARH_Sex_by_Nutr, features = c('Ppp1r1b','Vim','Dio2','Rax','Slc16a2'))
 
 #tany alpha
+# plot expression of alpha tanycyte genes
 FeaturePlot(ARH_Sex_by_Nutr, features = c('Cd59a','Slc17a8','Crym','Vcan'))
 #tany beta
+# plot the expression of beta tanycytes genes
 FeaturePlot(ARH_Sex_by_Nutr, features = c('Col25a1','Cacna2d2'))
 
 #OPC
+# plot expression of OPC genes
 FeaturePlot(ARH_Sex_by_Nutr, features = c('Pdgfra','Cspg4'))
 #Endothe
+# plot expression of endothelial genes
 FeaturePlot(ARH_Sex_by_Nutr, features = c('Cldn5','Adgrf5'))
 #Epend
+# plot expression of epend genes
 FeaturePlot(ARH_Sex_by_Nutr, features = c('Ccdc153','Pltp','Meig1','Foxj1'))
 FeaturePlot(ARH_Sex_by_Nutr, features = epend.genes)
 #vascular and leptomeningeal cells (VLMC)
+# plot expression of VLMC genes
 FeaturePlot(ARH_Sex_by_Nutr, features = c('Slc6a13','Kcnj8','Dcn'))
 #####
 
 
-
+# save cell clusters as a dataframe
 sn_cell_types <- ARH_Sex_by_Nutr@active.ident |> as.data.frame()
 sn_cell_types <- rename(sn_cell_types, clusters = 'ARH_Sex_by_Nutr@active.ident')
 
-
+# rename clusters based on marker genes
 sn_cell_types <- sn_cell_types |> 
   mutate(cell_type = if_else((clusters == 2 | clusters == 4 | clusters == 5 | clusters == 6 |
                                 clusters == 7 |  clusters == 8 | clusters == 9 |  
@@ -292,14 +313,14 @@ sn_cell_types <- sn_cell_types |>
                                                                      )
                                                              )))
 
-
+# save cell types to seurat object
 ARH_Sex_by_Nutr$cell_type <- sn_cell_types$cell_type
 
 
 
 ######
 
-
+# one hot encode sex by nutritional state condition
 sn_conditions <- ARH_Sex_by_Nutr@meta.data[,c(1:4)] |> as.data.frame()
 sn_conditions <- sn_conditions |> 
   mutate(F_Fed = (if_else(sexXnutr == "F_Fed", 1, 0)))
@@ -321,7 +342,7 @@ ARH_Sex_by_Nutr$M_Fast <- sn_conditions$M_Fast
 
 
 
-
+# plot F_Fed condition in TSNE space
 FeaturePlot(ARH_Sex_by_Nutr, label = FALSE, 
             features = 'F_Fed', reduction = 'tsne',
             pt.size = 0.01, order = T,
@@ -338,7 +359,7 @@ FeaturePlot(ARH_Sex_by_Nutr, label = FALSE,
 
 #ggsave('figures/f_fed_dimplot.tiff', device = 'tiff', units = 'in', width = 5,height = 5,dpi = 600)
 
-
+# plot F_Fast condition in TSNE space
 FeaturePlot(ARH_Sex_by_Nutr, label = FALSE, 
             features = 'F_Fast', reduction = 'tsne', 
             pt.size = 0.01, order = TRUE,
@@ -355,6 +376,7 @@ FeaturePlot(ARH_Sex_by_Nutr, label = FALSE,
 
 #ggsave('figures/f_fast_dimplot.tiff', device = 'tiff', units = 'in', width = 5,height = 5,dpi = 600)
 
+# plot M_Fed condition in TSNE space
 FeaturePlot(ARH_Sex_by_Nutr, label = FALSE, 
             features = 'M_Fed', reduction = 'tsne',
             pt.size = 0.01, order = TRUE,
@@ -371,7 +393,7 @@ FeaturePlot(ARH_Sex_by_Nutr, label = FALSE,
 
 #ggsave('figures/m_fed_dimplot.tiff', device = 'tiff', units = 'in', width = 5,height = 5,dpi = 600)
 
-
+# plot M_Fast condition in TSNE space
 FeaturePlot(ARH_Sex_by_Nutr, label = FALSE, 
             features = 'M_Fast', reduction = 'tsne',
             pt.size = 0.01, order = TRUE,
@@ -390,7 +412,7 @@ FeaturePlot(ARH_Sex_by_Nutr, label = FALSE,
 
 
 
-
+# one hot encode batches
 sn_batches <- ARH_Sex_by_Nutr@meta.data[,c(1,5)] |> as.data.frame()
 sn_batches <- sn_batches |> 
   mutate(B1 = (if_else(Batch == "B1", 1, 0)))
@@ -408,7 +430,7 @@ ARH_Sex_by_Nutr$B2 <- sn_batches$B2
 ARH_Sex_by_Nutr$B3 <- sn_batches$B3
 
 
-
+# plot batch 1 in TSNE space
 FeaturePlot(ARH_Sex_by_Nutr, label = FALSE, 
             features = 'B1', reduction = 'tsne', 
             pt.size = 0.01, order = TRUE,
@@ -426,7 +448,7 @@ FeaturePlot(ARH_Sex_by_Nutr, label = FALSE,
 #ggsave('figures/B1_dimplot.tiff', device = 'tiff', units = 'in', width = 5,height = 5,dpi = 600)
 
 
-
+# plot batch 2 in TSNE space
 FeaturePlot(ARH_Sex_by_Nutr, label = FALSE, 
             features = 'B2', reduction = 'tsne',
             pt.size = 0.01, order = TRUE,
@@ -443,7 +465,7 @@ FeaturePlot(ARH_Sex_by_Nutr, label = FALSE,
 
 #ggsave('figures/B2_dimplot.tiff', device = 'tiff', units = 'in', width = 5,height = 5,dpi = 600)
 
-
+# plot batch 3 in TSNE space
 FeaturePlot(ARH_Sex_by_Nutr, label = FALSE, 
             features = 'B3', reduction = 'tsne',
             pt.size = 0.01, order = TRUE,
@@ -465,7 +487,7 @@ FeaturePlot(ARH_Sex_by_Nutr, label = FALSE,
 
 
 
-
+# create dotplot for top marker genes for clusters
 DotPlot(ARH_Sex_by_Nutr, features = (c(neuro.genes[c(1,2,5,11)],
                                                                 
                                                                 'Vipr2','Pomc','Agrp','Tac2',neuro.genes[c(8,10)],'Ghrh',neuro.genes[9],'Sst',
@@ -510,13 +532,13 @@ ggsave('post_2023-06-02_figures/dotplot_celltypes_markers3.svg', device = 'svg',
 
 
 
-
+# save clusters to dataframe
 sn_cell_types <- ARH_Sex_by_Nutr@active.ident |> as.data.frame()
 sn_cell_types <- rename(sn_cell_types, clusters = 'ARH_Sex_by_Nutr@active.ident')
 
 
 
-
+# rename clusters to major nuclei of medial basal hypothalamus
 sn_cell_types2 <- sn_cell_types |> 
   mutate(cell_type2 = if_else((clusters == 2 | clusters == 5 | clusters == 6 | clusters == 8 |
                                 clusters == 9 |  clusters == 11 | clusters == 13 |  
@@ -554,7 +576,7 @@ sn_cell_types2 <- sn_cell_types |>
 ARH_Sex_by_Nutr$cell_type2 <- sn_cell_types2$cell_type2
 
 
-DimPlot(ARH_Sex_by_Nutr, label = T) & NoLegend()
+# plot cell type 2 in TSNE space
 DimPlot(ARH_Sex_by_Nutr, group.by = 'cell_type2', label = T, label.size = 3, repel = FALSE) + 
   NoLegend() +
   theme(axis.title.x=element_blank(),
@@ -579,18 +601,22 @@ DimPlot(ARH_Sex_by_Nutr, group.by = 'cell_type2', label = T, label.size = 3, rep
 #####2024-04-29######
 
 
-
+# read in clustering from Campbell et al 2017
 campbell_clust_markers <- read.csv('../../scARC_Lowell/seurat/campbell_clust_markers2.csv', row.names = 1)
+# exclude non ARH clusters and glia cells from own clustering
 bean_clust_markers <- all_sample_markers |> filter(cluster != 3, cluster != 4, cluster != 5, cluster != 10, cluster != 12, 
                                                    cluster != 13, cluster != 21, 
                                            cluster != 26, cluster != 31, cluster != 36, cluster != 38,
                                            cluster != 40, cluster != 41, cluster != 43)
 
+# create empty tibble 
 campbell_by_bean <- tibble(Bean_clust = 'a', Campbell_clust = 'b', 
                            Overlap = 0, Bean_count = 0, Campbell_count = 0, 
                            Bean_port = 0.00, Campbell_port = 0.00, .rows = 1054)
+# set rownum to 0
 rownum = 0
 
+# use for loop to look for overlapping marker genes between Campbell and Bean
 for(i in unique(bean_clust_markers$cluster)){
   for(j in unique(campbell_clust_markers$cluster)){
     
@@ -644,11 +670,11 @@ for(i in unique(bean_clust_markers$cluster)){
   #                            'n33.unassigned','n34.unassifned','n28.Qrfp')) +
 ####
 
-
+# convert to a dataframe
 campbell_by_bean <- campbell_by_bean |> as.data.frame()
 
   
-
+# plot correlation between Campbell and Bean clusters
 ggplot(campbell_by_bean, aes(Campbell_clust, as.factor(Bean_clust) )) + 
   
   scale_y_discrete(limits = as.factor(c(44,6,
@@ -696,6 +722,8 @@ ggplot(campbell_by_bean, aes(Campbell_clust, as.factor(Bean_clust) )) +
 ####2024-04-30#####
 
 ##########'Asb4','Irs4','Ecel1','Tbx3','Nr5a2',
+
+# plot dotplot of top marker genes for clusters
 DotPlot(ARH_Sex_by_Nutr, features = rev(c(neuro.genes[c(1,2,5,8,10,11)],
                                        
                                        'Agrp','Pomc','Glipr1','Tac2','Pdyn','Kiss1','Ghrh','Th','Satb2','Coch','Sst',
@@ -817,13 +845,13 @@ DotPlot(ARH_Sex_by_Nutr, features = rev(c(neuro.genes[c(1,2,5,8,10,11)],
 
 
 
-
+# save clusters as a dataframe
 sn_cell_types <- ARH_Sex_by_Nutr@active.ident |> as.data.frame()
 sn_cell_types <- rename(sn_cell_types, cluster = 'ARH_Sex_by_Nutr@active.ident')
 
 
 
-
+# rename clusters based on top marker genes and or Campbell et al cluster names
 sn_cell_types3 <- sn_cell_types |> 
   mutate(cell_type3 = if_else(cluster == 0, 'Agrp',
                               if_else(cluster == 2, 'Pomc',
@@ -875,7 +903,7 @@ sn_cell_types3 <- sn_cell_types |>
 
 
 
-
+# save cell type 3 to seurat object
 ARH_Sex_by_Nutr$cell_type3 <- sn_cell_types3$cell_type3
 
 
@@ -890,7 +918,7 @@ ARH_Sex_by_Nutr$cell_type3 <- sn_cell_types3$cell_type3
 
 
 
-
+# plot cell type 3 in TSNE space
 DimPlot(ARH_Sex_by_Nutr, label = T, group.by = 'cell_type3', 
         repel = T, shuffle = F,
         label.size = 12/.pt
@@ -912,7 +940,7 @@ ggsave('figures/cell_type_dimplot.svg', device = 'svg', units = 'in', width = 7,
 #####2024-05-01######
 
 
-
+# create dotplot of top marker genes for clusters
 DotPlot(ARH_Sex_by_Nutr,group.by = 'cell_type3', features = rev(c(neuro.genes[c(1,2,5,8,10,11)], 'Ghr','Esr1','Prlr','Pgr',
                                           
                                           'Agrp','Pomc','Glipr1','Tac2','Pdyn','Kiss1','Ghrh','Th','Satb2','Coch','Sst',
@@ -994,7 +1022,7 @@ ggsave('figures/dotplot_celltypes_markers2.svg', device = 'svg', units = 'in', w
 
 
 
-
+# create dotplot for marker genes
 DotPlot(ARH_Sex_by_Nutr,group.by = 'cell_type3', features = rev(c(neuro.genes[c(1,2,5,8,10,11)], 'Lepr','Insr','Ghr','Esr1','Prlr','Pgr',
                                                                   
                                                                   'Agrp','Pomc','Glipr1','Tac2','Pdyn','Kiss1','Ghrh','Th','Satb2','Coch','Sst',
@@ -1040,7 +1068,7 @@ ggsave('figures/dotplot_celltypes_markersA.tiff', device = 'tiff', units = 'in',
 
 
 
-
+# create dotplot for marker genes
 DotPlot(ARH_Sex_by_Nutr,group.by = 'cell_type3', features = rev(c(neuro.genes[c(1,2,5,8)],
                                                                   
                                                                  
@@ -1084,7 +1112,7 @@ ggsave('figures/dotplot_celltypes_markersB.tiff', device = 'tiff', units = 'in',
 
 
 
-
+# create dotplot for marker genes
 DotPlot(ARH_Sex_by_Nutr,group.by = 'cell_type3', features = rev(c(
                                                                   astro.genes[c(1,4,5)],
                                                                   'Vim','Dio2','Rax','Slc16a2','Crym','Vcan','Col25a1',
@@ -1128,7 +1156,7 @@ ggsave('figures/dotplot_celltypes_markersC.tiff', device = 'tiff', units = 'in',
 
 
 
-
+# custom TNSE plot with custom coloring
 DimPlot(ARH_Sex_by_Nutr, label = F, group.by = 'cell_type3',
         repel = F, shuffle = F,
         label.size = 4,
@@ -1199,10 +1227,11 @@ DimPlot(ARH_Sex_by_Nutr, label = F, group.by = 'cell_type3',
 #ggsave('post_2023-07-18_figures/cell_type4_dimplotv3.tiff', device = 'tiff', units = 'in', width = 9,height = 9,dpi = 600)
 #ggsave('post_2023-07-18_figures/cell_type4_dimplotv2.svg', device = 'svg', units = 'in', width = 9,height = 9,dpi = 600)
 
-
+# set active ident to cell type 3
 ARH_Sex_by_Nutr <- SetIdent(ARH_Sex_by_Nutr, value = 'cell_type3')
 
+# save updated seurat object 
 saveRDS(ARH_Sex_by_Nutr, file = 'data/ARH_Sex_by_Nutr.rds')
 
-
-cell_type_markers <- FindAllMarkers(ARH_Sex_by_Nutr, only.pos = TRUE, min.pct = 0.25, logfc.threshold = log2(1.25), pseudocount.use = 0)
+# find all marker genes for cell type 3, min pct 0.25, logfc threshold log2(1.25)
+cell_type_markers <- FindAllMarkers(ARH_Sex_by_Nutr, only.pos = TRUE, min.pct = 0.25, logfc.threshold = log2(1.25))
