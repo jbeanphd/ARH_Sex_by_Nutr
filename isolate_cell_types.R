@@ -2069,3 +2069,419 @@ write.xlsx(Pomc.Fst.female.higher.gost$result[,c(9,11,3)],
 
 write.xlsx(Pomc.Fst.male.higher.gost$result[,c(9,11,3)], 
            file = "../paper_figures/post_2025-04-07/GOMF_Tables/Pomc/Pomc_Fst_Male_higher.xlsx")
+
+
+
+# subclusters of Agrp and Pomc cell-types
+
+# read in data
+Agrp_Gm <- readRDS('data/Agrp_gm.rds')
+
+# read in DE analyses from DE_analysis_for_subcluster.R
+Agrp.Gm.F.Fd.v.Fst <- read.csv('data/Agrp_gm_F_Fd_v_Fst.csv')
+Agrp.Gm.M.Fd.v.Fst <- read.csv('data/Agrp_gm_M_Fd_v_Fst.csv')
+Agrp.Gm.Fd.F.v.M <- read.csv('data/Agrp_gm_Fd_F_v_M.csv')
+Agrp.Gm.Fst.F.v.M <- read.csv('data/Agrp_gm_Fst_F_v_M.csv')
+
+# plot volcano plot with DE genes in color female fed vs female fasted
+FindMarkers(Agrp_Gm, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Gm.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Gm.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Agrp.Gm.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/agrp_gm_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color male fed vs male fasted
+FindMarkers(Agrp_Gm, group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0,test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Gm.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Gm.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Agrp.Gm.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/agrp_gm_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color female fed vs male fed
+FindMarkers(Agrp_Gm, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Gm.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Gm.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Agrp.Gm.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/agrp_gm_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color female fasted vs male fasted
+FindMarkers(Agrp_Gm, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Gm.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Gm.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Agrp.Gm.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.7)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/agrp_gm_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+# read in data
+Agrp_Sst <- readRDS('data/Agrp_sst.rds')
+
+# read in DE analyses from DE_analysis_for_subcluster.R
+Agrp.Sst.F.Fd.v.Fst <- read.csv('data/Agrp_Sst_F_Fd_v_Fst.csv')
+Agrp.Sst.M.Fd.v.Fst <- read.csv('data/Agrp_Sst_M_Fd_v_Fst.csv')
+Agrp.Sst.Fd.F.v.M <- read.csv('data/Agrp_Sst_Fd_F_v_M.csv')
+Agrp.Sst.Fst.F.v.M <- read.csv('data/Agrp_Sst_Fst_F_v_M.csv')
+
+
+# plot volcano plot with DE genes in color female fed vs female fasted
+FindMarkers(Agrp_Sst, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Sst.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Sst.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Agrp.Sst.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/agrp_sst_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color male fed vs male fasted
+FindMarkers(Agrp_Sst, group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0,test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Sst.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Sst.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Agrp.Sst.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/agrp_sst_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color female fed vs male fed
+FindMarkers(Agrp_Sst, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Sst.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Sst.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Agrp.Sst.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/agrp_sst_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color female fasted vs male fasted
+FindMarkers(Agrp_Sst, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Sst.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Agrp.Sst.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Agrp.Sst.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.7)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/agrp_sst_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+# read in data
+Pomc_Anxa2 <- readRDS('data/Pomc_Anxa2.rds')
+
+# read in DE analyses from DE_analysis_for_subcluster.R
+Pomc.Anxa2.F.Fd.v.Fst <- read.csv('data/Pomc_anxa2_F_Fd_v_Fst.csv')
+Pomc.Anxa2.M.Fd.v.Fst <- read.csv('data/Pomc_anxa2_M_Fd_v_Fst.csv')
+Pomc.Anxa2.Fd.F.v.M <- read.csv('data/Pomc_anxa2_Fd_F_v_M.csv')
+Pomc.Anxa2.Fst.F.v.M <- read.csv('data/Pomc_anxa2_Fst_F_v_M.csv')
+
+
+# plot volcano plot with DE genes in color female fed vs female fasted
+FindMarkers(Pomc_Anxa2, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Anxa2.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Anxa2.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Anxa2.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_anxa2_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color male fed vs male fasted
+FindMarkers(Pomc_Anxa2, group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0,test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Anxa2.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Anxa2.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Anxa2.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_anxa2_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color female fed vs male fed
+FindMarkers(Pomc_Anxa2, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Anxa2.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Anxa2.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Anxa2.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_anxa2_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color female fasted vs male fasted
+FindMarkers(Pomc_Anxa2, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Anxa2.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Anxa2.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Anxa2.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.7)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_anxa2_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+# read in data
+Pomc_Glipr1 <- readRDS('data/Pomc_Glipr1.rds')
+
+# read in DE analyses from DE_analysis_for_subcluster.R
+Pomc.Glipr1.F.Fd.v.Fst <- read.csv('data/Pomc_glipr1_F_Fd_v_Fst.csv')
+Pomc.Glipr1.M.Fd.v.Fst <- read.csv('data/Pomc_glipr1_M_Fd_v_Fst.csv')
+Pomc.Glipr1.Fd.F.v.M <- read.csv('data/Pomc_glipr1_Fd_F_v_M.csv')
+Pomc.Glipr1.Fst.F.v.M <- read.csv('data/Pomc_glipr1_Fst_F_v_M.csv')
+
+
+# plot volcano plot with DE genes in color female fed vs female fasted
+FindMarkers(Pomc_Glipr1, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Glipr1.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Glipr1.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Glipr1.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_glipr1_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color male fed vs male fasted
+FindMarkers(Pomc_Glipr1, group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0,test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Glipr1.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Glipr1.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Glipr1.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_glipr1_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color female fed vs male fed
+FindMarkers(Pomc_Glipr1, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Glipr1.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Glipr1.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Glipr1.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_glipr1_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color female fasted vs male fasted
+FindMarkers(Pomc_Glipr1, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Glipr1.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Glipr1.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Glipr1.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.7)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_glipr1_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+# read in data
+Pomc_Ttr <- readRDS('data/Pomc_Ttr.rds')
+
+# read in DE analyses from DE_analysis_for_subcluster.R
+Pomc.Ttr.F.Fd.v.Fst <- read.csv('data/Pomc_ttr_F_Fd_v_Fst.csv')
+Pomc.Ttr.M.Fd.v.Fst <- read.csv('data/Pomc_ttr_M_Fd_v_Fst.csv')
+Pomc.Ttr.Fd.F.v.M <- read.csv('data/Pomc_ttr_Fd_F_v_M.csv')
+Pomc.Ttr.Fst.F.v.M <- read.csv('data/Pomc_ttr_Fst_F_v_M.csv')
+
+
+# plot volcano plot with DE genes in color female fed vs female fasted
+FindMarkers(Pomc_Ttr, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Ttr.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Ttr.F.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Ttr.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_ttr_female_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color male fed vs male fasted
+FindMarkers(Pomc_Ttr, group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0,test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Ttr.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Ttr.M.Fd.v.Fst, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Ttr.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_ttr_male_fed_vs_fasted_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color female fed vs male fed
+FindMarkers(Pomc_Ttr, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Ttr.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#6a816a', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Ttr.Fd.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#19552b', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Ttr.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_ttr_fed_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+# plot volcano plot with DE genes in color female fasted vs male fasted
+FindMarkers(Pomc_Ttr, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast', 
+            logfc.threshold = 0, min.pct = 0, test.use = 'MAST', latent.vars = 'Sample_ID') |> 
+  ggplot(aes(avg_log2FC, -log10(p_val_adj))) + geom_point(shape = 21, color = 'grey', fill= 'grey', size =1) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Ttr.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC > 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#f9994f', color = 'black', shape = 21, size = 1.5) +
+  geom_point(inherit.aes = F, data = filter(Pomc.Ttr.Fst.F.v.M, p_val_adj < 0.05, avg_log2FC < 0), 
+             aes(avg_log2FC, -log10(p_val_adj)), fill = '#ff6e00', color = 'black', shape = 21, size = 1.5) +
+  ggrepel::geom_text_repel(data = filter(Pomc.Ttr.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
+                           aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
+  theme_classic() +
+  #coord_cartesian(xlim = c(-2.5,2.7)) +
+  labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
+  theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
+        axis.title = element_text(family = 'Arial', color = 'black',size = 8))
+ggsave(filename = 'figures3/pomc_ttr_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
