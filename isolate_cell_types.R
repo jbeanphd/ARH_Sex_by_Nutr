@@ -2094,7 +2094,7 @@ FindMarkers(Agrp_Gm, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast'
   ggrepel::geom_text_repel(data = filter(Agrp.Gm.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-5.63,5.63)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2112,7 +2112,7 @@ FindMarkers(Agrp_Gm, group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast'
   ggrepel::geom_text_repel(data = filter(Agrp.Gm.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-6.11,6.11)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2130,7 +2130,7 @@ FindMarkers(Agrp_Gm, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed',
   ggrepel::geom_text_repel(data = filter(Agrp.Gm.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-12.34,12.34)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2148,7 +2148,7 @@ FindMarkers(Agrp_Gm, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fast
   ggrepel::geom_text_repel(data = filter(Agrp.Gm.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.7)) +
+  coord_cartesian(xlim = c(-10.39,10.39)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2177,7 +2177,7 @@ FindMarkers(Agrp_Sst, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast
   ggrepel::geom_text_repel(data = filter(Agrp.Sst.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-2.73,2.73)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2195,7 +2195,7 @@ FindMarkers(Agrp_Sst, group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast
   ggrepel::geom_text_repel(data = filter(Agrp.Sst.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-4.35,4.35)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2213,7 +2213,7 @@ FindMarkers(Agrp_Sst, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed'
   ggrepel::geom_text_repel(data = filter(Agrp.Sst.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-10.46,10.46)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2231,7 +2231,7 @@ FindMarkers(Agrp_Sst, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fas
   ggrepel::geom_text_repel(data = filter(Agrp.Sst.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.7)) +
+  coord_cartesian(xlim = c(-10.39,10.39)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2260,7 +2260,7 @@ FindMarkers(Pomc_Anxa2, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fa
   ggrepel::geom_text_repel(data = filter(Pomc.Anxa2.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-5.59,5.59)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2278,7 +2278,7 @@ FindMarkers(Pomc_Anxa2, group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fa
   ggrepel::geom_text_repel(data = filter(Pomc.Anxa2.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-3.05,3.05)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2296,7 +2296,7 @@ FindMarkers(Pomc_Anxa2, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fe
   ggrepel::geom_text_repel(data = filter(Pomc.Anxa2.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-11.31,11.31)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2314,7 +2314,7 @@ FindMarkers(Pomc_Anxa2, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_F
   ggrepel::geom_text_repel(data = filter(Pomc.Anxa2.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.7)) +
+  coord_cartesian(xlim = c(-9.35,9.35)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2343,7 +2343,7 @@ FindMarkers(Pomc_Glipr1, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_F
   ggrepel::geom_text_repel(data = filter(Pomc.Glipr1.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-3.3,3.3)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2361,7 +2361,7 @@ FindMarkers(Pomc_Glipr1, group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_F
   ggrepel::geom_text_repel(data = filter(Pomc.Glipr1.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-1.83,1.83)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2379,7 +2379,7 @@ FindMarkers(Pomc_Glipr1, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_F
   ggrepel::geom_text_repel(data = filter(Pomc.Glipr1.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-11.72,11.72)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2397,7 +2397,7 @@ FindMarkers(Pomc_Glipr1, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_
   ggrepel::geom_text_repel(data = filter(Pomc.Glipr1.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.7)) +
+  coord_cartesian(xlim = c(-7.05,7.05)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2426,7 +2426,7 @@ FindMarkers(Pomc_Ttr, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'F_Fast
   ggrepel::geom_text_repel(data = filter(Pomc.Ttr.F.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-3.07,3.07)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2444,7 +2444,7 @@ FindMarkers(Pomc_Ttr, group.by = 'sexXnutr',ident.1 = 'M_Fed', ident.2 = 'M_Fast
   ggrepel::geom_text_repel(data = filter(Pomc.Ttr.M.Fd.v.Fst, p_val_adj < 0.05, abs(avg_log2FC) > 0.9), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-1.23,1.23)) +
   labs(x = 'log2(Fed/Fasted)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2462,7 +2462,7 @@ FindMarkers(Pomc_Ttr, group.by = 'sexXnutr',ident.1 = 'F_Fed', ident.2 = 'M_Fed'
   ggrepel::geom_text_repel(data = filter(Pomc.Ttr.Fd.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.5)) +
+  coord_cartesian(xlim = c(-12.36,12.36)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
@@ -2480,7 +2480,7 @@ FindMarkers(Pomc_Ttr, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fas
   ggrepel::geom_text_repel(data = filter(Pomc.Ttr.Fst.F.v.M, p_val_adj < 0.05, abs(avg_log2FC) > 1), 
                            aes(avg_log2FC, -log10(p_val_adj), label = gene), size = 5/.pt) +
   theme_classic() +
-  #coord_cartesian(xlim = c(-2.5,2.7)) +
+  coord_cartesian(xlim = c(-10.89,10.89)) +
   labs(x = 'log2(Female/Male)', y= '-log10(adj. p-value)') +
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
