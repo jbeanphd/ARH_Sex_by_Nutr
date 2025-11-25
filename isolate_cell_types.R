@@ -2485,3 +2485,134 @@ FindMarkers(Pomc_Ttr, group.by = 'sexXnutr',ident.1 = 'F_Fast', ident.2 = 'M_Fas
   theme(axis.text = element_text(family = 'Arial', color = 'black',size = 8),
         axis.title = element_text(family = 'Arial', color = 'black',size = 8))
 ggsave(filename = 'figures3/pomc_ttr_fasted_female_vs_male_volc.tiff', device = 'tiff', units = 'in', width = 3.5, height = 2, dpi = 600)
+
+
+
+##IEGs analysis for DA neurons
+
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(patchwork)  
+
+DA_obj <- readRDS("DA_Sex_by_Nutr.rds")
+
+IEG_genes <- c(
+  "Fos","Nr4a2", "Atf3","Bhlhe40","Ccl2","Ccn1","Ccn2","Ccnl1","Cebpd","Csrnp1","Cxcl3",
+  "Dusp1","Dusp5","Dusp6","Egr1","Egr3","F3","Flg","Fosb","Gadd45b",
+  "Gem","Hbegf","Ier3","Il6","Jun","Junb","Klf10","Klf6","Klhl21",
+  "Ldlr","Mcl1","Nfkbia","Nfkbiz","Nr2c2","Nr4a1","Nr4a2","Plau","Pmaip1",
+  "Rcan1","Sgk1","Slc2a3","Srf","Tnfaip3","Trib1","Tsc22d1","Zfp36")
+
+DefaultAssay(DA_obj) <- "RNA"
+Idents(DA_obj) <- DA_obj$sexXnutr  
+
+run_mast_genes <- function(DA_obj, id1, id2, genes, test.use="wilcox") {
+  res <- FindMarkers(
+    DA_obj, ident.1 = id1, ident.2 = id2,
+    test.use = test.use,
+    logfc.threshold = 0, min.pct = 0, pseudocount.use = 1,
+    features = genes
+  )
+  res$gene     <- rownames(res)
+  res$contrast <- paste(id1, "vs", id2)
+  res
+}
+
+res_DA_F   <- run_mast_genes(DA_obj, "F_Fed", "F_Fast", IEG_genes)  
+res_DA_M   <- run_mast_genes(DA_obj, "M_Fed", "M_Fast", IEG_genes)  
+res_DA_Fd_FvM <- run_mast_genes(DA_obj, "F_Fed", "M_Fed",  IEG_genes)  
+res_DA_Fst_FvM <- run_mast_genes(DA_obj, "F_Fast", "M_Fast",  IEG_genes)
+
+sig_IEGs_DA <- dplyr::bind_rows(res_DA_F, res_DA_M, res_DA_Fd_FvM, res_DA_Fst_FvM)
+
+##Plot Heatmap
+plot_gene_bar <- function(g){
+  df <- FetchData(DA_obj, vars=c(g,"sexXnutr"))
+  df$sexXnutr <- factor(df$sexXnutr, levels=c("F_Fed","F_Fast","M_Fed","M_Fast"),
+                        labels=c("Fed","Fasted","Fed","Fasted"))
+  ggplot(df, aes(sexXnutr, .data[[g]], fill=sexXnutr)) +
+    stat_summary(geom="bar", fun=mean, color="black", width=0.8) +
+    stat_summary(geom="errorbar", fun.data=mean_se, width=0.3) +
+    labs(y=paste0(g," expression"), x="") +
+    theme_classic() + theme(legend.position="none")
+}
+plot_gene_bar("Fos"); plot_gene_bar("Nr4a1"); plot_gene_bar("Junb")
+
+DefaultAssay(DA_obj) <- "RNA"
+
+DA_obj <- ScaleData(DA_obj, features = IEG_genes, verbose = FALSE)
+
+p <- DoHeatmap(
+  DA_obj,
+  features = IEG_genes,
+  group.by = "sexXnutr",
+  disp.min = -2,
+  disp.max = 2,
+  raster = TRUE,
+  group.colors = c(
+    "F_Fed"  = "#f9994f",
+    "F_Fast" = "#6a816a",
+    "M_Fed"  = "#ff6e00",
+    "M_Fast" = "#19552b"
+  )
+) +
+  theme(
+    axis.text.y = element_text(size = 10)
+  ) +
+  labs(fill = "Expression")+
+  guides(color = "none") 
+
+# Save plot
+ggsave("DA_IEG_heatmap_cells.pdf", p, width = 10, height = 7, units = "in", dpi = 600)
+ggsave("DA_IEG_heatmap_cells.png", p, width = 10, height = 7, units = "in", dpi = 600)
+
+# Plot volcano plot
+plot_volcano <- function(df, contrast_name, fc_thr = 0, padj_thr = 0.05, n_label = 8) {
+  dd <- df %>%
+    filter(contrast == contrast_name) %>%
+    distinct(gene, .keep_all = TRUE) %>%
+    mutate(
+      neglog10 = -log10(p_val_adj + 1e-300),
+      sig = case_when(
+        p_val_adj < padj_thr & avg_log2FC >  fc_thr ~ "Up",
+        p_val_adj < padj_thr & avg_log2FC < -fc_thr ~ "Down",
+        TRUE ~ "NS"
+      )
+    )
+  
+  lab_df <- dd %>% filter(sig != "NS") %>% arrange(p_val_adj) %>% slice_head(n = n_label)
+  
+  ggplot(dd, aes(x = avg_log2FC, y = neglog10)) +
+    geom_point(aes(color = sig), size = 3, alpha = 0.9) +
+    scale_color_manual(values = c("Down"="#4575B4", "NS"="grey80", "Up"="#D73027")) +
+    geom_vline(xintercept = c(-fc_thr, fc_thr), linetype = "dashed", color = "grey60") +
+    geom_hline(yintercept = -log10(padj_thr), linetype = "dashed", color = "grey60") +
+    ggrepel::geom_text_repel(
+      data = lab_df, aes(label = gene), size = 5,
+      max.overlaps = 50, box.padding = 0.3, point.padding = 0.2
+    ) +
+    labs(
+      x = "avg log2FC",
+      y = expression(-log[10]("adj. p value")),
+      title = contrast_name
+    ) +
+    ylim(0,5) +
+    xlim(-10,10) +
+    theme_classic() +
+    theme(
+      legend.position = "none",
+      plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+      axis.title = element_text(size = 14, face = "bold"),
+      axis.text = element_text(size = 12, color = "black"))}
+
+p1 <- plot_volcano(sig_IEGs_DA, "F_Fed vs F_Fast")
+p2 <- plot_volcano(sig_IEGs_DA, "M_Fed vs M_Fast")
+p3 <- plot_volcano(sig_IEGs_DA, "F_Fed vs M_Fed")
+p4 <- plot_volcano(sig_IEGs_DA, "F_Fast vs M_Fast")
+
+p_all <- (p1 | p2) / (p3 | p4)
+
+# Save plot
+ggsave("DA_IEGs_volcano.pdf", p_all, width = 8, height = 6,dpi = 600)
+ggsave("DA_IEGs_volcano.png", p_all, width = 8, height = 6,dpi = 600)
